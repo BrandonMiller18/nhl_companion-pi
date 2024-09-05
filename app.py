@@ -49,3 +49,8 @@ if __name__ == '__main__':
         'Away team logo': game.away_team_logo
     }
     print(f"\n{json.dumps(game_info, indent=4)}")
+
+    if game.is_game:
+        game.watch_game()
+    else: 
+        print(f"{game.team} does not play today.")

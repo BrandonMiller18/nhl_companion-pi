@@ -11,7 +11,7 @@ class Game:
 
     
     def game_info(self):
-        r = requests.get(f'{BASE_API_URL}score/2024-10-08')
+        r = requests.get(f'{BASE_API_URL}score/{TODAY}')
         data = json.dumps(r.json(), indent=4)
 
         # save file for testing

@@ -49,6 +49,9 @@ class Game:
                     if game['homeTeam']['abbrev'] == self.team:
                         self.home = True
                         self.away = False
+
+                    if self.home == self.away:
+                        raise Exception(f"HOME and AWAY values cannot be equal.\nHome = {self.home}\nAway = {self.away}")
                     
                     break
                 

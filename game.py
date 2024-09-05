@@ -9,7 +9,7 @@ class Game:
 
     
     def game_info(self):
-        r = requests.get(f'{BASE_API_URL}score/2024-10-08')
+        r = requests.get(f'{BASE_API_URL}score/{TODAY}')
         data = json.dumps(r.json(), indent=4)
 
         # save file for testing
@@ -43,12 +43,13 @@ class Game:
                     self.home_team_logo = game['homeTeam']['logo']
 
                     if game['awayTeam']['abbrev'] == self.team:
-                        self.home = True
-                        self.away = False
-
-                    if game['homeTeam']['abbrev'] == self.team:
                         self.home = False
                         self.away = True
+
+                    if game['homeTeam']['abbrev'] == self.team:
+                        self.home = True
+                        self.away = False
+                    
                     break
                 
                 else:

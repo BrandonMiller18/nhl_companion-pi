@@ -37,7 +37,7 @@ if __name__ == '__main__':
     game_info = {
         'User team abbr': game.team,
         'Game date': game.date,
-        'Game start time': standard_date(game.game_start_time),
+        'Game start time': standard_date(game.game_start_time) if game.game_start_time else None,
         'Game state': game.game_state,
         'User team plays': game.is_game,
         'User team is home': game.home,

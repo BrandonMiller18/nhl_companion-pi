@@ -4,8 +4,8 @@ from config import BASE_API_URL, TODAY
 
 class Game:
 
-    def __init__(self):
-        self.team = input('Input team abbr: ').upper()
+    def __init__(self, user_team):
+        self.team = user_team
 
     
     def game_info(self):

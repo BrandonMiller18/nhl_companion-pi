@@ -1,3 +1,7 @@
+/* :root {
+
+} */
+
 html {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     padding: 0;
@@ -12,7 +16,8 @@ body, div, h1, h2, h3, h4, h5, p, a, li, ul, ol, img, button, form, table {
 
 section {
     width: 100%;
-    min-height: 33vw;
+    height: fit-content;
+    min-height: 10vh;
     max-height: 80vh;
     padding: 0 250px;
     padding-top: 100px;
@@ -28,6 +33,13 @@ section.light {
     color: #222;
 }
 
+div.hero {
+    min-height: 100vh;
+    background-color: #000;
+    color: #fefefe;
+    padding: 100px;
+}
+
 div.hero h1 {
     font-size: 3.5rem;
     letter-spacing: 5px;
@@ -35,10 +47,11 @@ div.hero h1 {
     display: block;
 }
 
+
 .hero .btn {
-    position: relative;
-    bottom: -250px;
-    right: -700px;
+    position: absolute;
+    bottom: 250px;
+    right: 150px;
     padding: 15px 50px;
     border-radius: 8px;
     background-color: white;

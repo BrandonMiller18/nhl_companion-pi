@@ -15,6 +15,11 @@ def configure_game():
     return render_template("start.html")
 
 
+@app.route('/start/game<game_id>')
+def watch_game():
+    
+    return render_template("game.html")
+
 # game = Game()
 # game.game_info()
 # 

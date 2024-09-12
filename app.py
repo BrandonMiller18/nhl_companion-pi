@@ -53,6 +53,8 @@ def watch_game():
 
     game = Game(user_team=user_team, stream_delay=stream_delay)
     game.game_info()
+    game.watch_game()
+
     game_info = {
         'User team abbr': game.team,
         'Game date': game.date,

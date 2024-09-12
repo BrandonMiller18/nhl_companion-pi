@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <div class="hero">
+    <div id="1" class="hero">
         <h1>NHL Companion</h1>
         <form class="configuration-form" action="/update" method="POST">
             <label for="user_team">Select your team:</label>
@@ -27,7 +27,12 @@
             </tr>
         </table>
         {% endif %}
-        <a class="btn" href="/watch">Start App</a>
+        <a class="btn" href="/watch" onclick="$('#1').hide();$('#2').show()">Start App</a>
+    </div>
+
+    <div id="2" hidden>
+        <p>App is running. Navigate back to the homepage to cancel the app.</p>
+        <a href="{{url_for('index')}}" class="btn">Homepage</a>
     </div>
 
 {% endblock %}

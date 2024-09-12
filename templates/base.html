@@ -6,6 +6,7 @@
     <title>{% block title %}{% endblock %}</title>
     <meta name="description" content="{% block desc %}{% endblock %}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/stylesheet.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
 {% with messages = get_flashed_messages()%}

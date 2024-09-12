@@ -1,13 +1,13 @@
 import requests
 import json
-from datetime import time
+import time
 from config import BASE_API_URL, TODAY
 
 class Game:
 
     def __init__(self, user_team, stream_delay):
         self.team = user_team
-        self.stream_delay = stream_delay
+        self.stream_delay = int(stream_delay)
 
     
     def game_info(self):
@@ -77,12 +77,9 @@ class Game:
             "Game over": "OFF"
         }
 
-        # r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
-        # data = json.dumps(r.json(), indent=4)
-        # data = json.loads(data) # load json for parsing
-
-        with open("game.json", "r") as f:
-                data = json.load(f)
+        r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
+        data = json.dumps(r.json(), indent=4)
+        data = json.loads(data) # load json for parsing
 
         game_state = data["gameState"]
         period = data["displayPeriod"]
@@ -91,26 +88,26 @@ class Game:
         away_score = data["awayTeam"]["score"]
 
         while True:
-            # r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
-            # data = json.dumps(r.json(), indent=4)
-            # data = json.loads(data) # load json for parsing
+            r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
+            data = json.dumps(r.json(), indent=4)
+            data = json.loads(data) # load json for parsing
 
             # for testing
-            with open("game.json", "r") as f:
-                data = json.load(f)
+            # with open("game.json", "r") as f:
+            #     data = json.load(f)
 
             game_state = data["gameState"]
             if game_state != "LIVE":
                 if game_state == "FUT":
-                    print("The game has not started yet. Checking again in 30 minutes.")
+                    print("The game has not started yet. Checking again in 30 minutes.", flush=True)
                     time.sleep(1800)
                     continue
                 elif game_state == "PRE":
-                    print("The game is about to start. Checking again in 2 minutes.")
+                    print("The game is about to start. Checking again in 2 minutes.", flush=True)
                     time.sleep(120)
                     continue
                 elif game_state == "OFF": 
-                    print("The game is over.")
+                    print("The game is over.", flush=True)
                     
                     if self.home and home_score > away_score or self.away and away_score > home_score:
                         self.win = True
@@ -119,10 +116,10 @@ class Game:
 
                     if self.win:
                         # do victory celebration
-                        print(f"{self.team} wins!!!")
+                        print(f"{self.team} wins!!!", flush=True)
                     else:
                         # do sad stuff
-                        print(f"{self.team} lost. :(")
+                        print(f"{self.team} lost. :(", flush=True)
                     
                     break
 
@@ -143,6 +140,6 @@ class Game:
             home_score = new_home_score
             away_score = new_away_score
 
-            print(f"Home score is: {home_score}\nAway score is: {away_score}")
+            print(f"Home score is: {home_score}\nAway score is: {away_score}", flush=True)
 
             time.sleep(self.stream_delay)

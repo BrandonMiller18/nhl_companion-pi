@@ -6,7 +6,7 @@
 
     <div class="hero">
         <h1>NHL Companion</h1>
-        <form action="/update" method="POST">
+        <form class="configuration-form" action="/update" method="POST">
             <label for="user_team">Select your team:</label>
             <select name="user_team" id="">
                 <option value="STL">STL</option>
@@ -15,7 +15,19 @@
             <input type="text" name="stream_delay" id="">
             <input type="submit">
         </form>
-        <a class="btn" href="/update">Start App</a>
+        {% if data %}
+        <table>
+            <tr>
+                <th>Current Team</th>
+                <td>{{ data['user_team'] }}</td>
+            </tr>
+            <tr>
+                <th>Stream Delay</th>
+                <td>{{ data['stream_delay'] }}</td>
+            </tr>
+        </table>
+        {% endif %}
+        <a class="btn" href="/watch">Start App</a>
     </div>
 
 {% endblock %}

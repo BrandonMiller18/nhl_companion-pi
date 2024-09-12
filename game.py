@@ -4,12 +4,14 @@ from config import BASE_API_URL, TODAY
 
 class Game:
 
-    def __init__(self, user_team):
+    def __init__(self, user_team, stream_delay):
         self.team = user_team
+        self.stream_delay = stream_delay
 
     
     def game_info(self):
-        r = requests.get(f'{BASE_API_URL}score/{TODAY}')
+        # r = requests.get(f'{BASE_API_URL}score/{TODAY}')
+        r = requests.get(f'{BASE_API_URL}score/2024-10-08')
         data = json.dumps(r.json(), indent=4)
 
         # save file for testing

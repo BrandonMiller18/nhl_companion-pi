@@ -6,7 +6,16 @@
 
     <div class="hero">
         <h1>NHL Companion</h1>
-        <a class="btn" href="/start">Start App</a>
+        <form action="/update" method="POST">
+            <label for="user_team">Select your team:</label>
+            <select name="user_team" id="">
+                <option value="STL">STL</option>
+            </select>
+            <label for="stream_delay">Set stream delay:</label>
+            <input type="text" name="stream_delay" id="">
+            <input type="submit">
+        </form>
+        <a class="btn" href="/update">Start App</a>
     </div>
 
 {% endblock %}

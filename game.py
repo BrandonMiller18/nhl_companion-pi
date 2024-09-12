@@ -1,5 +1,6 @@
 import requests
 import json
+from datetime import time
 from config import BASE_API_URL, TODAY
 
 class Game:

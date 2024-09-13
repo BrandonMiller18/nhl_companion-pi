@@ -112,6 +112,4 @@ def end_game():
     game.stop_loop = True
     game.watching = False
 
-    flash("App was stopped by user.", "danger")
-
     return False

@@ -136,8 +136,6 @@ class Game:
                     break
 
 
-            self.period = data["displayPeriod"]
-
             new_home_score = data["homeTeam"]["score"]
             new_away_score = data["awayTeam"]["score"]
 
@@ -151,6 +149,15 @@ class Game:
 
             self.home_score = new_home_score
             self.away_score = new_away_score
+
+            new_period = data["displayPeriod"]
+
+            if new_period > self.period:
+                # flash green light for end of period
+                # do something for intermission
+                pass
+            
+            self.period = new_period
 
             print(f"Home score is: {self.home_score}\nAway score is: {self.away_score}", flush=True)
 

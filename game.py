@@ -110,15 +110,15 @@ class Game:
 
             self.game_state = data["gameState"]
             if self.game_state != "LIVE":
-                if game_state == "FUT":
+                if self.game_state == "FUT":
                     print("The game has not started yet. Checking again in 30 minutes.", flush=True)
                     time.sleep(1800)
                     continue
-                elif game_state == "PRE":
+                elif self.game_state == "PRE":
                     print("The game is about to start. Checking again in 2 minutes.", flush=True)
                     time.sleep(120)
                     continue
-                elif game_state == "OFF": 
+                elif self.game_state == "OFF": 
                     print("The game is over.", flush=True)
                     
                     if self.home and self.home_score > self.away_score or self.away and self.away_score > self.home_score:

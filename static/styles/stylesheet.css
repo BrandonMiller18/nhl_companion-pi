@@ -14,7 +14,7 @@ body, div, h1, h2, h3, h4, h5, p, a, li, ul, ol, img, button, form, table {
     margin: 0;
 }
 
-section {
+/* section {
     width: 100%;
     height: fit-content;
     min-height: 10vh;
@@ -58,4 +58,4 @@ div.hero h1 {
     text-decoration: none;
     color: #000;
     font-size: 2rem;
-}
+} */

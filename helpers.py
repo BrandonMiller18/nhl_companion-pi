@@ -1,3 +1,5 @@
+import requests
+import json
 from datetime import datetime
 from dateutil import tz
 import pytz
@@ -25,3 +27,17 @@ def standard_date(dt):
 
     # convert to just time, strip date
     return f[len(f) - 9:-1]
+
+
+def update_teams():
+
+    teams = []
+
+    r = requests.get('https://api-web.nhle.com/v1/standings/now')
+    # data = json.dumps(r.json())
+    data = json.loads(json.dumps(r.json()))
+
+    for team in data['standings']:
+        teams.append(team['teamAbbrev']['default'])
+
+    return teams

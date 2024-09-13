@@ -77,26 +77,30 @@ class Game:
             "Game over": "OFF"
         }
 
-        r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
-        data = json.dumps(r.json(), indent=4)
-        data = json.loads(data) # load json for parsing
+        # r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
+        # data = json.dumps(r.json(), indent=4)
+        # data = json.loads(data) # load json for parsing
+
+        # for testing
+        with open("game.json", "r") as f:
+            data = json.load(f)
 
         game_state = data["gameState"]
         period = data["displayPeriod"]
 
-        home_score = data["homeTeam"]["score"]
-        away_score = data["awayTeam"]["score"]
+        self.home_score = data["homeTeam"]["score"]
+        self.away_score = data["awayTeam"]["score"]
 
         while True:
-            r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
-            data = json.dumps(r.json(), indent=4)
-            data = json.loads(data) # load json for parsing
+            # r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
+            # data = json.dumps(r.json(), indent=4)
+            # data = json.loads(data) # load json for parsing
 
             # for testing
-            # with open("game.json", "r") as f:
-            #     data = json.load(f)
+            with open("game.json", "r") as f:
+                data = json.load(f)
 
-            game_state = data["gameState"]
+            self.game_state = data["gameState"]
             if game_state != "LIVE":
                 if game_state == "FUT":
                     print("The game has not started yet. Checking again in 30 minutes.", flush=True)
@@ -109,7 +113,7 @@ class Game:
                 elif game_state == "OFF": 
                     print("The game is over.", flush=True)
                     
-                    if self.home and home_score > away_score or self.away and away_score > home_score:
+                    if self.home and self.home_score > self.away_score or self.away and self.away_score > self.home_score:
                         self.win = True
                     else:
                         self.win = False
@@ -124,22 +128,22 @@ class Game:
                     break
 
 
-            period = data["displayPeriod"]
+            self.period = data["displayPeriod"]
 
             new_home_score = data["homeTeam"]["score"]
             new_away_score = data["awayTeam"]["score"]
 
-            if new_home_score > home_score and self.home:
+            if new_home_score > self.home_score and self.home:
                 # play horn, flash lights
                 print(f"{self.team} scores!!", flush=True)
 
-            if new_away_score > away_score and self.away:
+            if new_away_score > self.away_score and self.away:
                 # play horn, flash lights
                 print(f"{self.team} scores!!", flush=True)
 
-            home_score = new_home_score
-            away_score = new_away_score
+            self.home_score = new_home_score
+            self.away_score = new_away_score
 
-            print(f"Home score is: {home_score}\nAway score is: {away_score}", flush=True)
+            print(f"Home score is: {self.home_score}\nAway score is: {self.away_score}", flush=True)
 
             time.sleep(self.stream_delay)

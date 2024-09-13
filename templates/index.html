@@ -9,7 +9,9 @@
         <form class="configuration-form" action="/update" method="POST">
             <label for="user_team">Select your team:</label>
             <select name="user_team" id="">
-                <option value="STL">STL</option>
+                {% for team in team_abbreviations %}
+                    <option value="STL">{{team}}</option>
+                {% endfor %}
             </select>
             <label for="stream_delay">Set stream delay:</label>
             <input type="text" name="stream_delay" id="">
@@ -27,7 +29,7 @@
             </tr>
         </table>
         {% endif %}
-        <a class="btn" href="/watch" onclick="$('#1').hide();$('#2').show()">Start App</a>
+        <a class="btn" href="{{url_for('start_game')}}" onclick="$('#1').hide();$('#2').show()">Start App</a>
     </div>
 
     <div id="2" hidden>

@@ -61,10 +61,13 @@ class Game:
                 else:
                     self.is_game = False # selected team does not play
                     self.game_state = None
+                    self.game_start_time = None
                     self.home = False
                     self.away = False
                     self.home_team = None
+                    self.home_team_logo = None
                     self.away_team = None
+                    self.away_team_logo = None
                     self.game_id = None
 
     
@@ -85,13 +88,18 @@ class Game:
         with open("game.json", "r") as f:
             data = json.load(f)
 
-        game_state = data["gameState"]
-        period = data["displayPeriod"]
+        self.game_state = data["gameState"]
+        self.period = data["displayPeriod"]
 
         self.home_score = data["homeTeam"]["score"]
         self.away_score = data["awayTeam"]["score"]
 
+        self.stop_loop = False
         while True:
+            if self.stop_loop:
+                break
+
+
             # r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
             # data = json.dumps(r.json(), indent=4)
             # data = json.loads(data) # load json for parsing
@@ -101,7 +109,7 @@ class Game:
                 data = json.load(f)
 
             self.game_state = data["gameState"]
-            if game_state != "LIVE":
+            if self.game_state != "LIVE":
                 if game_state == "FUT":
                     print("The game has not started yet. Checking again in 30 minutes.", flush=True)
                     time.sleep(1800)

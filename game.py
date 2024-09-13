@@ -1,6 +1,9 @@
 import requests
 import json
 import time
+
+from playsound import playsound
+
 from config import BASE_API_URL, TODAY
 
 class Game:
@@ -141,11 +144,17 @@ class Game:
             new_away_score = data["awayTeam"]["score"]
 
             if new_home_score > self.home_score and self.home:
-                # play horn, flash lights
+                try:
+                    playsound(f"/static/audio/{self.team}.mp3")
+                except:
+                    playsound(f"/static/audio/goal.mp3")
                 print(f"{self.team} scores!!", flush=True)
 
             if new_away_score > self.away_score and self.away:
-                # play horn, flash lights
+                try:
+                    playsound(f"/static/audio/{self.team}.mp3")
+                except:
+                    playsound(f"/static/audio/goal.mp3")
                 print(f"{self.team} scores!!", flush=True)
 
             self.home_score = new_home_score

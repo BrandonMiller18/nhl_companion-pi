@@ -37,17 +37,17 @@ def configure_game():
 
         f.write(json.dumps(data))
 
-        flash("Configuration has been updated!")
+        flash("Configuration has been updated!", "success")
 
     return redirect(url_for('index'))
 
 
-@app.route('/start', methods=['GET'])
+@app.route('/start', methods=['GET', 'POST'])
 def start_game():
 
     # Check if the config.json file exists
     if not os.path.isfile('config.json'):
-        flash("Missing config.json file. Must set configuration first!", 'error')
+        flash("Missing config.json file. Must set configuration first!", 'danger')
         return redirect(url_for('index'))
 
     # get team and stream delay values from config file
@@ -57,8 +57,14 @@ def start_game():
         stream_delay = data['stream_delay']
 
     # instatiate game object and start the game
+    global game 
     game = Game(user_team=user_team, stream_delay=stream_delay)
     game.game_info()
+
+    if not game.is_game:
+        flash(f"{game.team} does not play today.", "danger")
+        return redirect(url_for('index'))
+
     game.watch_game()
 
     game_info = {
@@ -78,4 +84,15 @@ def start_game():
         'away_score': game.away_score
     }
 
-    return render_template('start_game.html', data=game_info) 
+    if game.stop_loop:
+        flash("App was stopped by user.", "danger")
+        return redirect(url_for('index'))
+
+    return render_template('start_game.html', data=game_info)
+
+@app.route('/_end-game')
+def end_game():
+    game.stop_loop = True
+    res = f"stop_loop set to: {game.stop_loop}"
+    print(res)
+    return res

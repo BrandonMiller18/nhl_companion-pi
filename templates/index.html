@@ -4,13 +4,13 @@
 
 {% block body %}
 
-    <div id="1" class="hero">
+    <div id="configure" class="container bg-dark pt-5">
         <h1>NHL Companion</h1>
         <form class="configuration-form" action="/update" method="POST">
             <label for="user_team">Select your team:</label>
             <select name="user_team" id="">
                 {% for team in team_abbreviations %}
-                    <option value="STL">{{team}}</option>
+                    <option value="{{team}}">{{team}}</option>
                 {% endfor %}
             </select>
             <label for="stream_delay">Set stream delay:</label>
@@ -29,12 +29,12 @@
             </tr>
         </table>
         {% endif %}
-        <a class="btn" href="{{url_for('start_game')}}" onclick="$('#1').hide();$('#2').show()">Start App</a>
+        <a class="btn btn-info btn-lg mt-2" href="{{url_for('start_game')}}" onclick="$('#configure').hide();$('#running').removeAttr('hidden');">Start App</a>
     </div>
 
-    <div id="2" hidden>
-        <p>App is running. Navigate back to the homepage to cancel the app.</p>
-        <a href="{{url_for('index')}}" class="btn">Homepage</a>
+    <div id="running" class="container bg-dark pt-5" hidden>
+        <p style="color: #fff;">App is running. Click the butotn below to cancel the app.</p>
+        <button class="btn btn-primary" onclick="$.get('/_end-game')">Cancel</button>
     </div>
 
 {% endblock %}

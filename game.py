@@ -96,6 +96,7 @@ class Game:
 
         self.stop_loop = False
         while True:
+            self.watching = True
             if self.stop_loop:
                 break
 
@@ -162,3 +163,5 @@ class Game:
             print(f"Home score is: {self.home_score}\nAway score is: {self.away_score}", flush=True)
 
             time.sleep(self.stream_delay)
+
+        self.watching = False

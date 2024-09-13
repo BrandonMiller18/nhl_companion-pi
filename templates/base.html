@@ -19,5 +19,20 @@
 {%endwith%}
 
 <body class="bg-dark text-light"> {% block body %}{% endblock %} </body>
-
+<footer class="footer fixed-bottom bg-light">
+    <div class="container text-center d-flex flex-row flex-wrap justify-content-center">
+        <a href="{{url_for('index')}}" class="btn btn-outline-primary m-3">
+            <strong>Home</strong>
+        </a>
+        <a href="{{url_for('help')}}" class="btn btn-outline-secondary m-3">
+            <strong>Troubleshooting help</strong>
+        </a>
+        <a class="btn btn-outline-secondary m-3">
+            <strong>Github</strong>
+        </a>    
+        <a class="btn btn-success m-3">
+            <strong>Donate</strong>
+        </a>    
+    </div>
+</footer>
 </html>

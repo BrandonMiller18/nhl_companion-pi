@@ -4,6 +4,23 @@
 
 {% block body %}
 
+<script>
+    function cancelGame() {
+        $.get('/_end-game');
+    }
+</script>
+
+
+    {% if watching %}
+    <div class="container bg-dark pt-5"></div>
+        <div class="d-flex flex-column w-50 align-middle justify-content-center h-100">
+            <p class="align-middle">App is running. Click the butotn below to cancel the app.</p>
+            <a href="/" class="w-25 btn btn-primary" onclick="cancelGame()">Cancel</a>
+        </div>
+    </div>
+
+    {% else %}
+
     <div id="configure" class="container-md gx-5 bg-dark pt-5">
         <h1>NHL Companion - Flask</h1>
         <div class="my-5 mx-3">
@@ -40,11 +57,13 @@
         <a class="btn btn-primary btn-lg mx-3" href="{{url_for('start_game')}}" onclick="$('#configure').hide();$('#running').removeAttr('hidden');">Start App</a>
     </div>
 
+    {% endif %}
+
     <!-- Display after user clicks start -->
     <div id="running" class="container bg-dark pt-5" hidden>
         <div class="d-flex flex-column w-50">
             <p class="align-middle">App is running. Click the butotn below to cancel the app.</p>
-            <button class="w-25 btn btn-primary" onclick="$.get('/_end-game')">Cancel</button>
+            <button class="w-25 btn btn-primary" onclick="cancelGame()">Cancel</button>
         </div>
     </div>
 

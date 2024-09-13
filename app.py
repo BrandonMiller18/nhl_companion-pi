@@ -13,15 +13,26 @@ app.config.from_pyfile('config.py')
 team_abbreviations = update_teams()
 
 @app.route('/')
-def index():
+def index():  
 
+    # check to see if there is a current game in progress, if there is we will adjust what is displayed on the homepage
+    try:
+        if game.watching:
+            watching = True
+        else:
+            watching = False
+    except:
+        watching = False
+
+    # check for configuration file
     if os.path.isfile('config.json'):
         with open('config.json', 'r') as f:
             data = json.load(f)
+    else:
+        data = None
 
-        return render_template('index.html', data=data, team_abbreviations=team_abbreviations)
+    return render_template('index.html', data=data, team_abbreviations=team_abbreviations, watching=watching)
 
-    return render_template("index.html", team_abbreviations=team_abbreviations)
 
 @app.route('/update', methods=['POST'])
 def configure_game():
@@ -88,11 +99,19 @@ def start_game():
         flash("App was stopped by user.", "danger")
         return redirect(url_for('index'))
 
-    return render_template('start_game.html', data=game_info)
+    return render_template('game.html', data=game_info)
+
+
+@app.route('/help')
+def help():
+    return render_template('help.html')
+
 
 @app.route('/_end-game')
 def end_game():
     game.stop_loop = True
-    res = f"stop_loop set to: {game.stop_loop}"
-    print(res)
-    return res
+    game.watching = False
+
+    flash("App was stopped by user.", "danger")
+
+    return False

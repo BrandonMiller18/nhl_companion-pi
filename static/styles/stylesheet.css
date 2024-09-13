@@ -14,48 +14,13 @@ body, div, h1, h2, h3, h4, h5, p, a, li, ul, ol, img, button, form, table {
     margin: 0;
 }
 
-/* section {
+.flashes {
     width: 100%;
-    height: fit-content;
-    min-height: 10vh;
-    max-height: 80vh;
-    padding: 0 250px;
-    padding-top: 100px;
-}
-
-section.dark {
-    background-color: #000;
-    color: #fefefe;
-}
-
-section.light {
-    background-color: #fefefe;
-    color: #222;
-}
-
-div.hero {
-    min-height: 100vh;
-    background-color: #000;
-    color: #fefefe;
-    padding: 100px;
-}
-
-div.hero h1 {
-    font-size: 3.5rem;
-    letter-spacing: 5px;
+    padding: 10px 5px;
     font-weight: bold;
-    display: block;
 }
 
-
-.hero .btn {
-    position: absolute;
-    bottom: 250px;
-    right: 150px;
-    padding: 15px 50px;
-    border-radius: 8px;
-    background-color: white;
-    text-decoration: none;
-    color: #000;
-    font-size: 2rem;
-} */
+.success {
+    background-color: green;
+    color: #fefefe;
+}

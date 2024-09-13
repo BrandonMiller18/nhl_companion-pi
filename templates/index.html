@@ -5,33 +5,42 @@
 {% block body %}
 
     <div id="configure" class="container bg-dark pt-5">
-        <h1>NHL Companion</h1>
-        <form class="configuration-form" action="/update" method="POST">
-            <label for="user_team">Select your team:</label>
-            <select name="user_team" id="">
-                {% for team in team_abbreviations %}
-                    <option value="{{team}}">{{team}}</option>
-                {% endfor %}
-            </select>
-            <label for="stream_delay">Set stream delay:</label>
-            <input type="text" name="stream_delay" id="">
-            <input type="submit">
-        </form>
+        <h1>NHL Companion - Flask</h1>
+        <div class="m-3">
+            <p>Complete the form below to set your desired configuration.</p>
+            <form action="/update" method="POST">
+                <div class="input-group">
+                    <select class="me-3 mb-3 form-select" name="user_team" id="">
+                        <option>Pick a team...</option>
+                        {% for team in team_abbreviations %}
+                            <option value="{{team}}">{{team}}</option>
+                        {% endfor %}
+                    </select>
+                    <input class="mb-3 form-control" type="text" placeholder="Input stream delay..." name="stream_delay" id="">
+                </div>
+                <input class="btn btn-secondary" type="submit">
+            </form>
+        </div>
+        <div class="m-3">
         {% if data %}
-        <table>
-            <tr>
-                <th>Current Team</th>
-                <td>{{ data['user_team'] }}</td>
-            </tr>
-            <tr>
-                <th>Stream Delay</th>
-                <td>{{ data['stream_delay'] }}</td>
-            </tr>
-        </table>
+            <h2>Current configuration</h2>
+            <table class="table table-striped">
+                <tr>
+                    <th scope="row">Current Team</th>
+                    <td>{{ data['user_team'] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Stream Delay</th>
+                    <td>{{ data['stream_delay'] }}s</td>
+                </tr>
+            </table>
+        </div>
+        <p class="m-3">If you are happy with the above configuration, click the start button below.</p>
         {% endif %}
-        <a class="btn btn-info btn-lg mt-2" href="{{url_for('start_game')}}" onclick="$('#configure').hide();$('#running').removeAttr('hidden');">Start App</a>
+        <a class="btn btn-primary btn-lg mx-3" href="{{url_for('start_game')}}" onclick="$('#configure').hide();$('#running').removeAttr('hidden');">Start App</a>
     </div>
 
+    <!-- Display after user clicks start -->
     <div id="running" class="container bg-dark pt-5" hidden>
         <p style="color: #fff;">App is running. Click the butotn below to cancel the app.</p>
         <button class="btn btn-primary" onclick="$.get('/_end-game')">Cancel</button>

@@ -4,9 +4,9 @@
 
 {% block body %}
 
-    <div id="configure" class="container bg-dark pt-5">
+    <div id="configure" class="container-md gx-5 bg-dark pt-5">
         <h1>NHL Companion - Flask</h1>
-        <div class="m-3">
+        <div class="my-5 mx-3">
             <p>Complete the form below to set your desired configuration.</p>
             <form action="/update" method="POST">
                 <div class="input-group">
@@ -21,10 +21,10 @@
                 <input class="btn btn-secondary" type="submit">
             </form>
         </div>
-        <div class="m-3">
         {% if data %}
-            <h2>Current configuration</h2>
-            <table class="table table-striped">
+        <div class="my-5 mx-3">
+            <h2 class="pt-3">Current configuration</h2>
+            <table class="table table-hover table-dark">
                 <tr>
                     <th scope="row">Current Team</th>
                     <td>{{ data['user_team'] }}</td>
@@ -42,8 +42,10 @@
 
     <!-- Display after user clicks start -->
     <div id="running" class="container bg-dark pt-5" hidden>
-        <p style="color: #fff;">App is running. Click the butotn below to cancel the app.</p>
-        <button class="btn btn-primary" onclick="$.get('/_end-game')">Cancel</button>
+        <div class="d-flex flex-column w-50">
+            <p class="align-middle">App is running. Click the butotn below to cancel the app.</p>
+            <button class="w-25 btn btn-primary" onclick="$.get('/_end-game')">Cancel</button>
+        </div>
     </div>
 
 {% endblock %}

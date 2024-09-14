@@ -152,9 +152,9 @@ class Game:
 
             if new_away_score > self.away_score and self.away:
                 try:
-                    playsound(f"/static/audio/{self.team}.mp3")
+                    playsound(f"/static/media/audio/{self.team}.mp3")
                 except:
-                    playsound(f"/static/audio/goal.mp3")
+                    playsound(f"/static/media/audio/goal.mp3")
                 print(f"{self.team} scores!!", flush=True)
 
             self.home_score = new_home_score

@@ -2,8 +2,9 @@ import requests
 import json
 import time
 
-from playsound import playsound
+import pygame
 
+from helpers import get_horn
 from config import BASE_API_URL, TODAY
 
 class Game:
@@ -11,6 +12,10 @@ class Game:
     def __init__(self, user_team, stream_delay):
         self.team = user_team
         self.stream_delay = int(stream_delay)
+
+        self.goal_horn = get_horn(self.team)
+        pygame.mixer.init()
+        pygame.mixer.music.load(self.goal_horn)
 
     
     def game_info(self):
@@ -143,20 +148,16 @@ class Game:
             new_home_score = data["homeTeam"]["score"]
             new_away_score = data["awayTeam"]["score"]
 
+            
             if new_home_score > self.home_score and self.home:
-                try:
-                    playsound(f"/static/media/audio/{self.team}.mp3")
-                except:
-                    playsound(f"/static/media/audio/goal.mp3")
+                pygame.mixer.music.play()
                 print(f"{self.team} scores!!", flush=True)
 
             if new_away_score > self.away_score and self.away:
-                try:
-                    playsound(f"/static/media/audio/{self.team}.mp3")
-                except:
-                    playsound(f"/static/media/audio/goal.mp3")
+                pygame.mixer.music.play()
                 print(f"{self.team} scores!!", flush=True)
 
+            
             self.home_score = new_home_score
             self.away_score = new_away_score
 

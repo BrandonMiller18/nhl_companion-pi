@@ -1,8 +1,10 @@
-import requests
 import json
+import os
+import requests
 from datetime import datetime
 from dateutil import tz
 import pytz
+import pygame
 
 
 def standard_date(dt):
@@ -41,3 +43,12 @@ def update_teams():
         teams.append(team['teamAbbrev']['default'])
 
     return teams
+
+def get_horn(abbr):
+    file = f"{os.getcwd()}/static/media/sounds/{abbr.lower()}.mp3"
+
+    if not os.path.isfile(file):
+        file = f"{os.getcwd()}/static/media/sounds/goal.mp3"
+
+
+    return file

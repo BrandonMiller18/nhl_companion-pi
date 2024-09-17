@@ -1,4 +1,5 @@
 import json
+import time
 import os.path
 from flask import Flask, render_template, redirect, request, flash, url_for
 
@@ -13,7 +14,8 @@ app.config.from_pyfile('config.py')
 team_abbreviations = update_teams()
 
 @app.route('/')
-def index():  
+@app.route('/<stop_loop>')
+def index(stop_loop=0):
 
     # check to see if there is a current game in progress, if there is we will adjust what is displayed on the homepage
     try:
@@ -30,6 +32,10 @@ def index():
             data = json.load(f)
     else:
         data = None
+
+    if stop_loop == '1':
+        flash("User has stopped the app.", "danger")
+        return redirect(url_for('index'))
 
     return render_template('index.html', data=data, team_abbreviations=team_abbreviations, watching=watching)
 
@@ -53,7 +59,21 @@ def configure_game():
     return redirect(url_for('index'))
 
 
-@app.route('/start', methods=['GET', 'POST'])
+@app.route('/start')
+def start_game_lp():
+
+    try:
+        if game.watching:
+            watching = True
+        else:
+            watching = False
+    except:
+        watching = False
+
+    return render_template('start.html', watching=watching)
+
+
+@app.route('/watch-game', methods=['GET', 'POST'])
 def start_game():
 
     # Check if the config.json file exists
@@ -96,10 +116,9 @@ def start_game():
     }
 
     if game.stop_loop:
-        flash("App was stopped by user.", "danger")
-        return redirect(url_for('index'))
+        return redirect(url_for('/_end-game'))
 
-    return render_template('game.html', data=game_info)
+    return render_template('watch_game.html', data=game_info)
 
 
 @app.route('/help')
@@ -110,6 +129,9 @@ def help():
 @app.route('/_end-game')
 def end_game():
     game.stop_loop = True
-    game.watching = False
+    
+    while game.watching:
+        print("Cancelling game...", flush=True)
+        time.sleep(1)
 
-    return False
+    return redirect(url_for('index', stop_loop=1))

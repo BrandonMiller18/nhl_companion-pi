@@ -116,7 +116,7 @@ def start_game():
     }
 
     if game.stop_loop:
-        return redirect(url_for('/_end-game'))
+        return redirect(url_for('end-game'))
 
     return render_template('watch_game.html', data=game_info)
 

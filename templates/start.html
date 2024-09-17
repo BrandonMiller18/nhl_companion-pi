@@ -6,7 +6,7 @@
 
 {% if watching %}
     
-<div id="running" style="" class="container-md gx-5 bg-dark pt-5 mb-5 d-flex flex-column align-middle justify-content-center">
+<div id="running" class="container-md gx-5 bg-dark pt-5 mb-5 d-flex flex-column align-middle justify-content-center">
 
     <h1 class="pb-2">App is running...</h1>
         <a class="btn btn-outline-danger btn-lg" href="{{url_for('end_game')}}">Cancel app</a>
@@ -36,12 +36,3 @@
 {% endif %}
 
 {% endblock %}
-
-<!-- 
-
-- start button that gets hidden
-- static "running" screen for running app
-- cancel button
-
-
--->

@@ -52,7 +52,7 @@ def configure_game():
         data = {
             "user_team": user_team,
             "stream_delay": "5" if stream_delay == '' else stream_delay,
-            "enable_loghts": True if enable_lights else False,
+            "enable_lights": True if enable_lights else False,
             "enable_audio": True if enable_audio else False
         }
 
@@ -90,10 +90,12 @@ def start_game():
         data = json.load(f)
         user_team = data['user_team']
         stream_delay = data['stream_delay']
+        enable_lights = data['enable_lights']
+        enable_audio = data['enable_audio']
 
     # instatiate game object and start the game
     global game 
-    game = Game(user_team=user_team, stream_delay=stream_delay)
+    game = Game(user_team=user_team, stream_delay=stream_delay, enable_audio=enable_audio, enable_lights=enable_lights)
     game.game_info()
 
     if not game.is_game:

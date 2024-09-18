@@ -1,10 +1,13 @@
 #include all necessary packages to get LEDs to work with Raspberry Pi
 import time
+import json
 import board
 import neopixel
 
 
-def goal_light():
+def goal_light(enable_lights):
+    if not enable_lights:
+        return
 
     LED_COUNT = 144
     #Initialise a strips variable, provide the GPIO Data Pin
@@ -33,7 +36,10 @@ def goal_light():
     strip.fill((0,0,0))
     
 
-def app_on_light():
+def app_on_light(enable_lights):
+    if not enable_lights:
+        return
+
     LED_COUNT = 144
     #Initialise a strips variable, provide the GPIO Data Pin
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
@@ -42,7 +48,10 @@ def app_on_light():
     strip.fill((0,0,50))
     
     
-def pregame_light():
+def pregame_light(enable_lights):
+    if not enable_lights:
+        return
+
     LED_COUNT = 144
     #Initialise a strips variable, provide the GPIO Data Pin
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
@@ -55,7 +64,10 @@ def pregame_light():
         time.sleep(1)
         i+=1
 
-def end_of_period_light():
+def end_of_period_light(enable_lights):
+    if not enable_lights:
+        return
+
     LED_COUNT = 144
     #Initialise a strips variable, provide the GPIO Data Pin
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
@@ -66,7 +78,10 @@ def end_of_period_light():
     strip.fill((0,0,0))
     
 
-def victory_light():
+def victory_light(enable_lights):
+    if not enable_lights:
+        return
+
     LED_COUNT = 144
     #Initialise a strips variable, provide the GPIO Data Pin
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)

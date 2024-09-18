@@ -10,9 +10,11 @@ from config import BASE_API_URL, TODAY
 
 class Game:
 
-    def __init__(self, user_team, stream_delay):
+    def __init__(self, user_team, stream_delay, enable_audio, enable_lights):
         self.team = user_team
         self.stream_delay = int(stream_delay)
+        self.enable_audio = enable_audio
+        self.enable_lights = enable_lights
 
         self.goal_horn = get_horn(self.team)
         pygame.mixer.init()
@@ -110,7 +112,7 @@ class Game:
                 turn_off_lights()
                 break
             
-            app_on_light()
+            app_on_light(self.enable_lights)
 
             # r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
             # data = json.dumps(r.json(), indent=4)
@@ -128,7 +130,7 @@ class Game:
                     continue
                 elif self.game_state == "PRE":
                     print("The game is about to start. Checking again in 2 minutes.", flush=True)
-                    pregame_light()
+                    pregame_light(self.enable_lights)
                     time.sleep(120)
                     continue
                 elif self.game_state == "OFF": 
@@ -140,7 +142,7 @@ class Game:
                         self.win = False
 
                     if self.win:
-                        victory_light()
+                        victory_light(self.enable_lights)
                         print(f"{self.team} wins!!!", flush=True)
                     else:
                         # do sad stuff
@@ -153,13 +155,13 @@ class Game:
             new_away_score = data["awayTeam"]["score"]
             
             if new_home_score > self.home_score and self.home:
-                pygame.mixer.music.play()
-                goal_light()
+                pygame.mixer.music.play() if self.enable_audio else False
+                goal_light(self.enable_lights)
                 print(f"{self.team} scores!!", flush=True)
 
             if new_away_score > self.away_score and self.away:
-                pygame.mixer.music.play()
-                goal_light()
+                pygame.mixer.music.play(self.enable_lights) if self.enable_audio else False
+                goal_light(self.enable_lights)
                 print(f"{self.team} scores!!", flush=True)
             
             self.home_score = new_home_score
@@ -168,7 +170,7 @@ class Game:
             new_period = data["displayPeriod"]
 
             if new_period > self.period:
-                end_of_period_light()
+                end_of_period_light(self.enable_lights)
                 pass
             
             self.period = new_period

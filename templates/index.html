@@ -24,14 +24,20 @@
                 <div class="input-group row">
                     <div class="col">
                         <select class="form-select col" name="user_team" id="">
+                            
+                            {% if data %}
+                            <option>{{data['user_team']}}</option>
+                            {% else %}
                             <option>Pick a team...</option>
+                            {% endif %}
+                            
                             {% for team in team_abbreviations %}
                                 <option value="{{team}}">{{team}}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="col">
-                        <input class="form-control col" type="text" placeholder="Input stream delay..." name="stream_delay" id="">
+                        <input class="form-control col" type="text" placeholder="5" name="stream_delay" id="">
                     </div>
                 </div>
                 <div class="input-group row ms-1 my-3">
@@ -56,12 +62,20 @@
             <h2 class="pt-3">Current configuration</h2>
             <table class="table table-hover table-dark">
                 <tr>
-                    <th scope="row">Current Team</th>
+                    <th scope="row">User team</th>
                     <td>{{ data['user_team'] }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Stream Delay</th>
+                    <th scope="row">Stream delay</th>
                     <td>{{ data['stream_delay'] }}s</td>
+                </tr>
+                <tr></tr>
+                    <th scope="row">Lights enabled</th>
+                    <td>{{ data['enable_lights'] }}</td>
+                </tr>
+                <tr></tr>
+                    <th scope="row">Goal horn enabled</th>
+                    <td>{{ data['enable_audio'] }}</td>
                 </tr>
             </table>
         </div>

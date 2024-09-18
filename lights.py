@@ -87,5 +87,3 @@ def turn_off_lights():
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
     strip = neopixel.NeoPixel(board.D18, LED_COUNT, brightness=0)
     strip.fill((0,0,0))
-    
-pregame_light()

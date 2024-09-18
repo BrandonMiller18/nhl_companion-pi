@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
+    {% block scripts %}{% endblock %}
     <meta name="description" content="{% block desc %}{% endblock %}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/stylesheet.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -13,12 +15,18 @@
 {% with messages = get_flashed_messages(with_categories=true)%}
 {% if messages %}
     {% for category, message in messages%}
-    <p class="p-4 text-light bg-{{ category }}"><strong>{{message}}</strong></p>
+    <div id="flashes" class="position-absolute top-0 start-0 w-100 text-center text-light bg-{{ category }}">
+        <p class="pt-3 pb-2"><strong>{{message}}</strong></p>
+    </div>
     {%endfor%}
+    <script>
+        $('#flashes').fadeIn().delay(2000).fadeOut('slow');
+    </script>
 {%endif%}
 {%endwith%}
 
 <body class="bg-dark text-light"> {% block body %}{% endblock %} </body>
+
 <footer class="footer fixed-bottom bg-light">
     <div class="container text-center d-flex flex-row flex-wrap justify-content-center">
         <a href="{{url_for('index')}}" class="btn btn-outline-primary m-3">
@@ -35,4 +43,5 @@
         </a>    
     </div>
 </footer>
+
 </html>

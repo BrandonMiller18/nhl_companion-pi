@@ -4,19 +4,14 @@
 
 {% block body %}
 
-<script>
-    function cancelGame() {
-        $.get('/_end-game');
-    }
-</script>
-
 
     {% if watching %}
-    <div class="container bg-dark pt-5"></div>
-        <div class="d-flex flex-column w-50 align-middle justify-content-center h-100">
-            <p class="align-middle">App is running. Click the butotn below to cancel the app.</p>
-            <a href="/" class="w-25 btn btn-primary" onclick="cancelGame()">Cancel</a>
-        </div>
+    <div id="running" class="container-md gx-5 bg-dark pt-5 mb-5 d-flex flex-column align-middle justify-content-center">
+
+        <h1 class="pb-2">App is running...</h1>
+        <a class="btn btn-outline-danger btn-lg" href="{{url_for('end_game')}}">Cancel app</a>
+        <p class="pt-2 small">*App will shutdown after the next fetch based on your stream delay setting.</p>
+    
     </div>
 
     {% else %}
@@ -54,17 +49,9 @@
         </div>
         <p class="m-3">If you are happy with the above configuration, click the start button below.</p>
         {% endif %}
-        <a class="btn btn-primary btn-lg mx-3" href="{{url_for('start_game')}}" onclick="$('#configure').hide();$('#running').removeAttr('hidden');">Start App</a>
+        <a class="btn btn-primary btn-lg mx-3" href="{{url_for('start_game_lp')}}">Start App</a>
     </div>
 
     {% endif %}
-
-    <!-- Display after user clicks start -->
-    <div id="running" class="container bg-dark pt-5 mb-5" hidden>
-        <div class="d-flex flex-column w-50">
-            <p class="align-middle">App is running. Click the butotn below to cancel the app.</p>
-            <button class="w-25 btn btn-primary" onclick="cancelGame()">Cancel</button>
-        </div>
-    </div>
 
 {% endblock %}

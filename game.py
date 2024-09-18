@@ -112,7 +112,6 @@ class Game:
             
             app_on_light()
 
-
             # r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
             # data = json.dumps(r.json(), indent=4)
             # data = json.loads(data) # load json for parsing
@@ -150,10 +149,8 @@ class Game:
                     turn_off_lights()
                     break
 
-            
             new_home_score = data["homeTeam"]["score"]
             new_away_score = data["awayTeam"]["score"]
-
             
             if new_home_score > self.home_score and self.home:
                 pygame.mixer.music.play()
@@ -164,7 +161,6 @@ class Game:
                 pygame.mixer.music.play()
                 goal_light()
                 print(f"{self.team} scores!!", flush=True)
-
             
             self.home_score = new_home_score
             self.away_score = new_away_score

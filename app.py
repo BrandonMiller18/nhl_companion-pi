@@ -45,11 +45,15 @@ def configure_game():
 
     user_team = request.form.get('user_team')
     stream_delay = request.form.get('stream_delay')
+    enable_lights = request.form.get('lights')
+    enable_audio = request.form.get('audio')
 
     with open('config.json', 'w') as f:
         data = {
             "user_team": user_team,
-            "stream_delay": 0 if stream_delay == '' else stream_delay
+            "stream_delay": "5" if stream_delay == '' else stream_delay,
+            "enable_loghts": True if enable_lights else False,
+            "enable_audio": True if enable_audio else False
         }
 
         f.write(json.dumps(data))

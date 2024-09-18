@@ -21,14 +21,32 @@
         <div class="my-5 mx-3">
             <p>Complete the form below to set your desired configuration.</p>
             <form action="/update" method="POST">
-                <div class="input-group">
-                    <select class="me-3 mb-3 form-select" name="user_team" id="">
-                        <option>Pick a team...</option>
-                        {% for team in team_abbreviations %}
-                            <option value="{{team}}">{{team}}</option>
-                        {% endfor %}
-                    </select>
-                    <input class="mb-3 form-control" type="text" placeholder="Input stream delay..." name="stream_delay" id="">
+                <div class="input-group row">
+                    <div class="col">
+                        <select class="form-select col" name="user_team" id="">
+                            <option>Pick a team...</option>
+                            {% for team in team_abbreviations %}
+                                <option value="{{team}}">{{team}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input class="form-control col" type="text" placeholder="Input stream delay..." name="stream_delay" id="">
+                    </div>
+                </div>
+                <div class="input-group row ms-1 my-3">
+                    <div class="form-check form-switch col">
+                        <input class="form-check-input" type="checkbox" name="lights" value="1" id="lights" checked>
+                        <label class="form-check-label" for="lights">
+                          Enable lights
+                        </label>
+                      </div>
+                      <div class="form-check form-switch col">
+                        <input class="form-check-input" type="checkbox" name="audio" value="1" id="audio" checked>
+                        <label class="form-check-label" for="audio">
+                          Enable audio
+                        </label>
+                      </div>
                 </div>
                 <input class="btn btn-secondary" type="submit">
             </form>

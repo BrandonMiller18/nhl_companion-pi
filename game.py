@@ -5,6 +5,7 @@ import time
 import pygame
 
 from helpers import get_horn
+from lights import goal_light, app_on_light, pregame_light, victory_light, end_of_period_light, turn_off_lights
 from config import BASE_API_URL, TODAY
 
 class Game:
@@ -106,7 +107,10 @@ class Game:
         while True:
             self.watching = True
             if self.stop_loop:
+                turn_off_lights()
                 break
+            
+            app_on_light()
 
 
             # r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
@@ -125,6 +129,7 @@ class Game:
                     continue
                 elif self.game_state == "PRE":
                     print("The game is about to start. Checking again in 2 minutes.", flush=True)
+                    pregame_light()
                     time.sleep(120)
                     continue
                 elif self.game_state == "OFF": 
@@ -136,25 +141,28 @@ class Game:
                         self.win = False
 
                     if self.win:
-                        # do victory celebration
+                        victory_light()
                         print(f"{self.team} wins!!!", flush=True)
                     else:
                         # do sad stuff
                         print(f"{self.team} lost. :(", flush=True)
                     
+                    turn_off_lights()
                     break
 
-
+            
             new_home_score = data["homeTeam"]["score"]
             new_away_score = data["awayTeam"]["score"]
 
             
             if new_home_score > self.home_score and self.home:
                 pygame.mixer.music.play()
+                goal_light()
                 print(f"{self.team} scores!!", flush=True)
 
             if new_away_score > self.away_score and self.away:
                 pygame.mixer.music.play()
+                goal_light()
                 print(f"{self.team} scores!!", flush=True)
 
             
@@ -164,8 +172,7 @@ class Game:
             new_period = data["displayPeriod"]
 
             if new_period > self.period:
-                # flash green light for end of period
-                # do something for intermission
+                end_of_period_light()
                 pass
             
             self.period = new_period
@@ -175,3 +182,4 @@ class Game:
             time.sleep(self.stream_delay)
 
         self.watching = False
+        turn_off_lights()

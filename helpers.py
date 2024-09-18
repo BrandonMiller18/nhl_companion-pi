@@ -44,6 +44,7 @@ def update_teams():
 
     return teams
 
+
 def get_horn(abbr):
     file = f"{os.getcwd()}/static/media/sounds/{abbr.lower()}.mp3"
 
@@ -51,4 +52,5 @@ def get_horn(abbr):
         file = f"{os.getcwd()}/static/media/sounds/goal.mp3"
 
 
-    return file
+    return file       
+

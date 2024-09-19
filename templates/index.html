@@ -1,7 +1,70 @@
 {% extends "base.html" %}
 {% block title %}NHL Companion | Hockey Goal Horn App{% endblock %}
 {% block desc %} Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum et ipsa facilis in, quidem voluptatum pariatur facere numquam qui corrupti ea, consequuntur itaque libero, autem consectetur officiis enim odit. Atque. {% endblock %}
+{% block scripts %}
 
+<meta id="user_team" data="{{data['user_team']}}">
+<meta id="stream_delay" data="{{data['stream_delay']}}">
+<meta id="enable_lights" data="{{data['enable_lights']}}">
+<meta id="enable_audio" data="{{data['enable_audio']}}">
+
+<script>
+
+    function get_config_meta() {
+        var user_team = $('#user_team').attr('data');
+        console.log(user_team);
+
+        var stream_delay = $('#stream_delay').attr('data');
+        console.log(stream_delay);
+
+        var enable_lights= $('#enable_lights').attr('data');
+        console.log(enable_lights);
+
+        var enable_audio = $('#enable_audio').attr('data');
+        console.log(enable_audio);
+
+        let data = {
+            ['user_team']: user_team,
+            ['stream_delay']: stream_delay,
+            ['enable_lights']: enable_lights,
+            ['enable_audio']: enable_audio
+        }
+                    
+        return data
+
+    };
+
+    function set_av_toggle(data) {
+        
+        var config_data = data;
+
+        if (config_data.enable_lights == "True") {
+            $('#lights').prop('checked', true);
+            
+        };
+
+        if (config_data.enable_audio == "True") {
+            $('#audio').prop('checked', true);
+        };
+
+    };
+
+
+
+
+
+    $(document).ready(function() {
+        let config_data = get_config_meta();
+        set_av_toggle(config_data)
+    }); 
+
+</script> 
+
+<script>
+
+</script>
+
+{% endblock %}
 {% block body %}
 
 
@@ -14,6 +77,7 @@
     
     </div>
 
+ 
     {% else %}
 
     <div id="configure" class="container-md gx-5 bg-dark pt-5 mb-5">
@@ -23,7 +87,7 @@
             <form action="/update" method="POST">
                 <div class="input-group row">
                     <div class="col">
-                        <select class="form-select col" name="user_team" id="">
+                        <select class="form-select col" name="user_team" id="user_team">
                             
                             {% if data %}
                             <option>{{data['user_team']}}</option>
@@ -37,18 +101,18 @@
                         </select>
                     </div>
                     <div class="col">
-                        <input class="form-control col" type="text" placeholder="5" name="stream_delay" id="">
+                        <input class="form-control col" type="text" placeholder="5" name="stream_delay" id="stream_delay">
                     </div>
                 </div>
                 <div class="input-group row ms-1 my-3">
                     <div class="form-check form-switch col">
-                        <input class="form-check-input" type="checkbox" name="lights" value="1" id="lights" checked>
+                        <input class="form-check-input" type="checkbox" name="lights" value="1" id="lights">
                         <label class="form-check-label" for="lights">
                           Enable lights
                         </label>
                       </div>
                       <div class="form-check form-switch col">
-                        <input class="form-check-input" type="checkbox" name="audio" value="1" id="audio" checked>
+                        <input class="form-check-input" type="checkbox" name="audio" value="1" id="audio">
                         <label class="form-check-label" for="audio">
                           Enable audio
                         </label>

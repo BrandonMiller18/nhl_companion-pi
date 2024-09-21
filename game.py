@@ -89,17 +89,16 @@ class Game:
         print("Watch game")
 
         # make initial API request to get the game data
-        # r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
-        # data = json.dumps(r.json(), indent=4)
+        r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
+        data = json.dumps(r.json(), indent=4)
         # save file for testing
-        # with open('game.json', 'w') as f:
-        #     f.write(data)
-    
-        # data = json.loads(data) # load json for parsing    
+        with open('game.json', 'w') as f:
+            f.write(data)
+        data = json.loads(data) # load json for parsing    
 
         # for testing, get rid of this some day
-        with open("game.json", "r") as f:
-            data = json.load(f)
+        # with open("game.json", "r") as f:
+        #     data = json.load(f)
 
         self.game_state = data["gameState"]
         self.period = data["displayPeriod"]
@@ -115,16 +114,16 @@ class Game:
                 break
 
             # API request to update game data
-            # r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
-            # data = json.dumps(r.json(), indent=4)
+            r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
+            data = json.dumps(r.json(), indent=4)
             # # save file for testing, delete this eventually
-            # with open('game.json', 'w') as f:
-            #     f.write(data)
-            # data = json.loads(data) # load json for parsing
+            with open('game.json', 'w') as f:
+                f.write(data)
+            data = json.loads(data) # load json for parsing
 
             # load json file for testing
-            with open("game.json", "r") as f:
-                data = json.load(f)
+            # with open("game.json", "r") as f:
+            #     data = json.load(f)
 
             self.game_state = data["gameState"]
 
@@ -134,7 +133,7 @@ class Game:
                 if self.game_state == "FUT":
                     print("The game has not started yet. Checking again in 30 minutes.", flush=True)
                     fut_light(self.led_count) if self.enable_lights else False
-                    time.sleep(5)
+                    time.sleep(1800)
                     continue
                 elif self.game_state == "PRE":
                     print("The game is about to start. Checking again in 2 minutes.", flush=True)

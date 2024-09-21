@@ -5,11 +5,9 @@ import board
 import neopixel
 
 
-def goal_light(enable_lights):
-    if not enable_lights:
-        return
+def goal_light(led_count):
 
-    LED_COUNT = 144
+    LED_COUNT = led_count
     #Initialise a strips variable, provide the GPIO Data Pin
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
     strip = neopixel.NeoPixel(board.D18, LED_COUNT, brightness=1)
@@ -36,23 +34,34 @@ def goal_light(enable_lights):
     strip.fill((0,0,0))
     
 
-def app_on_light(enable_lights):
-    if not enable_lights:
-        return
+def app_on_light(led_count):
 
-    LED_COUNT = 144
+    LED_COUNT = led_count
     #Initialise a strips variable, provide the GPIO Data Pin
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
     strip = neopixel.NeoPixel(board.D18, LED_COUNT, brightness=1)
     
     strip.fill((0,0,50))
     
-    
-def pregame_light(enable_lights):
-    if not enable_lights:
-        return
 
-    LED_COUNT = 144
+def fut_light(led_count):
+
+    LED_COUNT = led_count
+    #Initialise a strips variable, provide the GPIO Data Pin
+    #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
+    strip = neopixel.NeoPixel(board.D18, LED_COUNT, brightness=.05)
+    i = 0
+    while i < 3:
+        strip.fill((100, 50, 0))
+        time.sleep(1)
+        strip.fill((0,0,0))
+        time.sleep(1)
+        i+=1
+
+
+def pregame_light(led_count):
+
+    LED_COUNT = led_count
     #Initialise a strips variable, provide the GPIO Data Pin
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
     strip = neopixel.NeoPixel(board.D18, LED_COUNT, brightness=.2)
@@ -64,11 +73,9 @@ def pregame_light(enable_lights):
         time.sleep(1)
         i+=1
 
-def end_of_period_light(enable_lights):
-    if not enable_lights:
-        return
+def end_of_period_light(led_count):
 
-    LED_COUNT = 144
+    LED_COUNT = led_count
     #Initialise a strips variable, provide the GPIO Data Pin
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
     strip = neopixel.NeoPixel(board.D18, LED_COUNT, brightness=1)
@@ -78,11 +85,9 @@ def end_of_period_light(enable_lights):
     strip.fill((0,0,0))
     
 
-def victory_light(enable_lights):
-    if not enable_lights:
-        return
+def victory_light(led_count):
 
-    LED_COUNT = 144
+    LED_COUNT = led_count
     #Initialise a strips variable, provide the GPIO Data Pin
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
     strip = neopixel.NeoPixel(board.D18, LED_COUNT, brightness=1)
@@ -96,8 +101,8 @@ def victory_light(enable_lights):
         time.sleep(.05)
 
 
-def turn_off_lights():
-    LED_COUNT = 144
+def turn_off_lights(led_count):
+    LED_COUNT = led_count
     #Initialise a strips variable, provide the GPIO Data Pin
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
     strip = neopixel.NeoPixel(board.D18, LED_COUNT, brightness=0)

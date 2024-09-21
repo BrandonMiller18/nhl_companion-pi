@@ -1,0 +1,41 @@
+/* :root {
+
+} */
+
+html {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+}
+
+body,
+div,
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+a,
+li,
+ul,
+ol,
+img,
+button,
+form,
+table {
+    padding: 0;
+    margin: 0;
+}
+
+.flashes {
+    width: 100%;
+    padding: 10px 5px;
+    font-weight: bold;
+}
+
+.success {
+    background-color: green;
+    color: #fefefe;
+}

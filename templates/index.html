@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}NHL Companion | Hockey Goal Horn App{% endblock %}
+{% block desc %} Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum et ipsa facilis in, quidem voluptatum pariatur facere numquam qui corrupti ea, consequuntur itaque libero, autem consectetur officiis enim odit. Atque. {% endblock %}
+{% block scripts %}
+
+<meta id="user_team" data="{{data['user_team']}}">
+<meta id="stream_delay" data="{{data['stream_delay']}}">
+<meta id="enable_lights" data="{{data['enable_lights']}}">
+<meta id="enable_audio" data="{{data['enable_audio']}}">
+
+<script>
+
+    function get_config_meta() {
+        var user_team = $('#user_team').attr('data');
+        console.log(user_team);
+
+        var stream_delay = $('#stream_delay').attr('data');
+        console.log(stream_delay);
+
+        var enable_lights= $('#enable_lights').attr('data');
+        console.log(enable_lights);
+
+        var enable_audio = $('#enable_audio').attr('data');
+        console.log(enable_audio);
+
+        var led_count = $('#led_count').attr('data');
+        console.log(led_count);
+
+        let data = {
+            ['user_team']: user_team,
+            ['stream_delay']: stream_delay,
+            ['enable_lights']: enable_lights,
+            ['enable_audio']: enable_audio,
+            ['led_count']: led_count
+        }
+                    
+        return data
+
+    };
+
+
+    function set_av_toggle(data) {
+        
+        var config_data = data;
+
+        if (config_data.enable_lights == "True") {
+            $('#lights').prop('checked', true);
+        };
+
+        if (config_data.enable_audio == "True") {
+            $('#audio').prop('checked', true);
+        };
+
+    };
+
+
+    $(document).ready(function() {
+        let config_data = get_config_meta();
+        set_av_toggle(config_data);
+
+        
+        // check status of enable lights toggle
+        // if true, show LED COUNT field
+        var led_count_input = $('#led_count');
+        var enable_lights_toggle = $('#lights');
+
+        console.log(enable_lights_toggle)
+
+        if(enable_lights_toggle.is(':checked')) {
+            led_count_input.fadeIn();
+        } else {
+            led_count_input.fadeOut();
+        };
+
+        // listen for changes to enable lights toggle
+        enable_lights_toggle.on('change', function() {
+            if (this.checked) {
+                led_count_input.fadeIn();
+            } else {
+                led_count_input.fadeOut();
+            }
+        });
+    });
+
+    setTimeout(function(){$('#configure').fadeIn(1000)}, 0)
+    setTimeout(function(){$('form').fadeIn(1000)}, 500) 
+    setTimeout(function(){$('#current-configuration').fadeIn(1000)}, 1000)
+    setTimeout(function(){$('#start-button').fadeIn(1000)}, 1500);
+    setTimeout(function(){$('footer').fadeIn(1000)}, 2000);
+
+</script> 
+
+<script>
+
+</script>
+
+{% endblock %}
+{% block body %}
+
+
+    {% if watching %}
+    <div id="running" class="container-md gx-5 bg-dark pt-5 mb-5 d-flex flex-column align-middle justify-content-center">
+
+        <h1 class="pb-2">App is running...</h1>
+        <a class="btn btn-outline-danger btn-lg" href="{{url_for('end_game')}}">Cancel app</a>
+        <p class="pt-2 small">*App will shutdown after the next fetch based on your stream delay setting.</p>
+    
+    </div>
+
+ 
+    {% else %}
+
+    <div id="configure" style="display: none;" class="container-md gx-5 bg-dark pt-5 mb-5">
+        <h1>NHL Companion - Flask</h1>
+        <div class="my-5 mx-3">
+            <p>Complete the form below to set your desired configuration.</p>
+            <form style="display: none;" action="/update" method="POST">
+                <div class="input-group row">
+                    <div class="col">
+                        <select class="form-select col" name="user_team" id="user_team">
+                            
+                            {% if data %}
+                            <option>{{data['user_team']}}</option>
+                            {% else %}
+                            <option>Pick a team...</option>
+                            {% endif %}
+                            
+                            {% for team in team_abbreviations %}
+                                <option value="{{team}}">{{team}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input class="form-control col" type="text" placeholder="5" name="stream_delay" id="stream_delay">
+                    </div>
+                </div>
+                <div class="input-group row ms-1 my-3">
+                    <div class="form-check form-switch col">
+                        <input class="form-check-input" type="checkbox" name="lights" value="1" id="lights">
+                        <label class="form-check-label" for="lights">
+                          Enable lights
+                        </label>
+                      </div>
+                      <div class="form-check form-switch col">
+                        <input class="form-check-input" type="checkbox" name="audio" value="1" id="audio">
+                        <label class="form-check-label" for="audio">
+                          Enable audio
+                        </label>
+                      </div>
+                </div>
+                <div class="input-group row">
+                    <input type="text" class="form-control col m-3" name="led_count" id="led_count" placeholder="Input LED Count">
+                </div>
+                
+                <input class="btn btn-secondary" type="submit">
+            </form>
+        </div>
+        {% if data %}
+        <div id="current-configuration" style="display: none;" class="my-5 mx-3">
+            <h2 class="pt-3">Current configuration</h2>
+            <table class="table table-hover table-dark">
+                <tr>
+                    <th scope="row">User team</th>
+                    <td>{{ data['user_team'] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Stream delay</th>
+                    <td>{{ data['stream_delay'] }}s</td>
+                </tr>
+                <tr></tr>
+                    <th scope="row">Lights enabled</th>
+                    <td>{{ data['enable_lights'] }}</td>
+                </tr>
+                <tr></tr>
+                    <th scope="row">LED count</th>
+                    <td>{{ data['led_count'] }}</td>
+                </tr>
+                <tr></tr>
+                    <th scope="row">Goal horn enabled</th>
+                    <td>{{ data['enable_audio'] }}</td>
+                </tr>
+            </table>
+            <p class="m-3">If you are happy with the above configuration, click the start button below.</p>
+        </div>
+        {% endif %}
+        <a id="start-button" style="display: none;" class="btn btn-primary btn-lg mx-3" href="{{url_for('start_game_lp')}}">Start App</a>
+    </div>
+
+    {% endif %}
+
+{% endblock %}

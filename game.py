@@ -117,7 +117,7 @@ class Game:
         # set initial values before while loop
         self.game_state = data["gameState"]
         self.period = data["displayPeriod"]
-        self.inIntermission = data["clock"]["inIntermission"]
+        self.inIntermission = data["clock"]["inIntermission"] if self.game_state == "Live" else None
         self.home_score = data["homeTeam"]["score"]
         self.away_score = data["awayTeam"]["score"]
 

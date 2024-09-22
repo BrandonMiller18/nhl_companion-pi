@@ -15,7 +15,7 @@
 {% with messages = get_flashed_messages(with_categories=true)%}
 {% if messages %}
     {% for category, message in messages%}
-    <div id="flashes" class="position-absolute top-0 start-0 w-100 text-center text-light bg-{{ category }}">
+    <div style="z-index: 5000;" id="flashes" class="position-absolute top-0 start-0 w-100 text-center text-light bg-{{ category }}">
         <p class="pt-3 pb-2"><strong>{{message}}</strong></p>
     </div>
     {%endfor%}

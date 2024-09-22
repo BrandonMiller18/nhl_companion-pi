@@ -115,6 +115,7 @@ class Game:
         self.home_score = data["homeTeam"]["score"]
         self.away_score = data["awayTeam"]["score"]
 
+        i = 0
         self.stop_loop = False
         while True:
             self.watching = True # used to block user interface from starting multiple games
@@ -202,7 +203,8 @@ class Game:
             self.inIntermission = new_inIntermission
 
 
-            print(f"Home score is: {self.home_score}\nAway score is: {self.away_score}", flush=True)
+            print(f"Iteration: {i}\nHome score is: {self.home_score}\nAway score is: {self.away_score}", flush=True)
+            i += 1
 
             time.sleep(self.stream_delay)
 

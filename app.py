@@ -150,7 +150,8 @@ def start_game():
         return redirect(url_for('end_game'))
 
     # This template is half baked. TODO - come up with a better fucking solution
-    return render_template('watch_game.html', data=game_info)
+    flash('Game is over, or an error happened.', 'danger')
+    return redirect(url_for('index'))
 
 
 @app.route('/help')

@@ -25,17 +25,27 @@
 {%endif%}
 {%endwith%}
 
+<!-- Home button -->
+<header class="row p2">
+    <div class="mx-3 mt-3">
+        <a class="btn btn-outline-secondary text-light" href="{{url_for('index')}}">Home</a>    
+    </div>
+</header>
+
 <body class="bg-dark text-light"> {% block body %}{% endblock %} </body>
 
-<footer class="footer fixed-bottom bg-light" style="display: none;">
+<footer class="footer fixed-bottom bg-light p-2" style="display: none;">
     <div class="container text-center d-flex flex-row flex-wrap justify-content-center">
+        {% block prefooter %} {% endblock %}
+    </div>
+    <!-- <div class="container text-center d-flex flex-row flex-wrap justify-content-center">
         <a href="{{url_for('index')}}" class="btn btn-outline-primary m-3">
             <strong>Home</strong>
         </a>
         <a href="{{url_for('help')}}" class="btn btn-outline-secondary m-3">
             <strong>Troubleshooting help</strong>  
         </a>
-    </div>
+    </div> -->
 </footer>
 
 </html>

@@ -26,8 +26,9 @@ class Game:
 
     
     def game_info(self):
+        # Get and set all the information about the selected team's game
+
         r = requests.get(f'{BASE_API_URL}score/{TODAY}')
-        # r = requests.get(f'{BASE_API_URL}score/2024-10-08')
         data = json.dumps(r.json(), indent=4)
 
         # save file for testing
@@ -37,8 +38,9 @@ class Game:
         data = json.loads(data) # load json for parsing
         self.date = data["currentDate"]
 
+        # If the 'games' array has len=0, then there are no games today and the rest of this is pointless
         if len(data['games']) == 0:
-            self.is_game = False # no games today
+            self.is_game = False
             self.game_state = None
             self.game_start_time = None
             self.home = False
@@ -51,6 +53,7 @@ class Game:
         else:
             for game in data['games']:
                 if game['awayTeam']['abbrev'] == self.team or game['homeTeam']['abbrev'] == self.team:
+                    # Look for game which includes the selected team
                     self.is_game = True
                     self.game_state = game["gameState"]
                     self.game_start_time = game["startTimeUTC"]
@@ -60,6 +63,7 @@ class Game:
                     self.home_team = game['homeTeam']['name']['default']
                     self.home_team_logo = game['homeTeam']['logo']
 
+                    # Set home and away values
                     if game['awayTeam']['abbrev'] == self.team:
                         self.home = False
                         self.away = True
@@ -68,13 +72,16 @@ class Game:
                         self.home = True
                         self.away = False
 
+                    # Pointless check for home and away both being set to true
                     if self.home == self.away:
                         raise Exception(f"HOME and AWAY values cannot be equal.\nHome = {self.home}\nAway = {self.away}")
                     
+                    # Break the for loop becuase the values have been set
                     break
                 
+                # If team was not found above, that means there are NHL games today, but the user team does not play
                 else:
-                    self.is_game = False # selected team does not play
+                    self.is_game = False
                     self.game_state = None
                     self.game_start_time = None
                     self.home = False
@@ -130,7 +137,7 @@ class Game:
             self.game_state = data["gameState"]
 
             # check non live game statuses... I really hope this is all of them
-            # OFF status will break the loop and check if your team won. If so, it will do a victory dance
+            # OFF/FINAL status will break the loop and check if your team won. If so, it will do a victory dance
             if self.game_state != "LIVE":
                 if self.game_state == "FUT":
                     print("The game has not started yet. Checking again in 10 minutes.", flush=True)
@@ -199,5 +206,7 @@ class Game:
 
             time.sleep(self.stream_delay)
 
+        # if you got here the While True loop was broken, so you are not 
+        # watching the game anymore. Turn it all off
         self.watching = False
         turn_off_lights(self.led_count)

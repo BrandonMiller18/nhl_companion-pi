@@ -110,7 +110,7 @@
     {% else %}
 
     <div id="configure" style="display: none;" class="container-md gx-5 bg-dark py-5 mb-5">
-        <h1>NHL Companion - Flask</h1>
+        <h1>NHL Companion - Raspberry Pi Edition</h1>
         <div class="my-5 mx-3">
             <p>Complete the form below to set your desired configuration.</p>
             <form style="display: none;" action="/update" method="POST">
@@ -200,7 +200,7 @@
 {% if data %}
 {% block prefooter %}
 
-<button class="w-75 btn btn-success btn-lg">Start</button>
+<a href="{{url_for('start_game_lp')}}" class="w-75 btn btn-success btn-lg">Start</a>
 
 {% endblock %}
 {% endif %}

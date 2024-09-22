@@ -73,7 +73,7 @@ def pregame_light(led_count):
         time.sleep(1)
         i+=1
 
-def end_of_period_light(led_count):
+def period_light(led_count):
 
     LED_COUNT = led_count
     #Initialise a strips variable, provide the GPIO Data Pin

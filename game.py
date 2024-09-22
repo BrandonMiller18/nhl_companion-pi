@@ -5,7 +5,7 @@ import time
 import pygame
 
 from helpers import get_horn 
-from lights import goal_light, app_on_light, pregame_light, victory_light, end_of_period_light, turn_off_lights, fut_light
+from lights import goal_light, app_on_light, pregame_light, victory_light, period_light, turn_off_lights, fut_light
 from config import BASE_API_URL, TODAY
 
 class Game:
@@ -19,9 +19,10 @@ class Game:
         self.led_count = int(led_count)
 
         # set and initialize goal horn
-        self.goal_horn = get_horn(self.team)
-        pygame.mixer.init()
-        pygame.mixer.music.load(self.goal_horn)
+        if self.enable_audio:
+            self.goal_horn = get_horn(self.team)
+            pygame.mixer.init()
+            pygame.mixer.music.load(self.goal_horn)
 
     
     def game_info(self):
@@ -100,15 +101,16 @@ class Game:
         # with open("game.json", "r") as f:
         #     data = json.load(f)
 
+        # set initial values before while loop
         self.game_state = data["gameState"]
         self.period = data["displayPeriod"]
-
+        self.inIntermission = data["clock"]["inIntermission"]
         self.home_score = data["homeTeam"]["score"]
         self.away_score = data["awayTeam"]["score"]
 
         self.stop_loop = False
         while True:
-            self.watching = True
+            self.watching = True # used to block user interface from starting multiple games
             if self.stop_loop:
                 turn_off_lights(self.led_count)
                 break
@@ -131,16 +133,16 @@ class Game:
             # OFF status will break the loop and check if your team won. If so, it will do a victory dance
             if self.game_state != "LIVE":
                 if self.game_state == "FUT":
-                    print("The game has not started yet. Checking again in 30 minutes.", flush=True)
+                    print("The game has not started yet. Checking again in 10 minutes.", flush=True)
                     fut_light(self.led_count) if self.enable_lights else False
-                    time.sleep(1800)
+                    time.sleep(600)
                     continue
                 elif self.game_state == "PRE":
                     print("The game is about to start. Checking again in 2 minutes.", flush=True)
                     pregame_light(self.led_count) if self.enable_lights else False
                     time.sleep(120)
                     continue
-                elif self.game_state == "OFF": 
+                elif self.game_state in ("OFF", "FINAL"): 
                     print("The game is over.", flush=True)
                     
                     if self.home and self.home_score > self.away_score or self.away and self.away_score > self.home_score:
@@ -182,16 +184,16 @@ class Game:
             self.home_score = new_home_score
             self.away_score = new_away_score
 
-            # get period from fresh data
-            new_period = data["displayPeriod"]
+            # set new intermission value (bool)
+            new_inIntermission = data["clock"]["inIntermission"]
 
-            # if period changes, do a light show!
-            if new_period > self.period:
-                end_of_period_light(self.led_count) if self.enable_lights else False
-                pass
-            
-            # reset period for next check
-            self.period = new_period
+            # check if intermission value changed. If so, flash the green light
+            # signals start of intermission OR start of a new period
+            if self.inIntermission != new_inIntermission:
+                period_light(self.led_count) if self.enable_lights else False
+
+            self.inIntermission = new_inIntermission
+
 
             print(f"Home score is: {self.home_score}\nAway score is: {self.away_score}", flush=True)
 

@@ -20,9 +20,14 @@ class Game:
 
         # set and initialize goal horn
         if self.enable_audio:
-            self.goal_horn = get_horn(self.team)
-            pygame.mixer.init()
-            pygame.mixer.music.load(self.goal_horn)
+            try:
+                self.goal_horn = get_horn(self.team)
+                pygame.mixer.init()
+                pygame.mixer.music.load(self.goal_horn)
+            except pygame.error as message:
+                print("--\nCould not load pygame audio, probably because there is no audio device.")
+                print(f"{message}\n--")
+
 
     
     def game_info(self):

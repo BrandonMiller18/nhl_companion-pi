@@ -5,7 +5,7 @@ import time
 import pygame
 
 from helpers import get_horn 
-from lights import goal_light, app_on_light, pregame_light, victory_light, period_light, turn_off_lights, fut_light
+from lights import goal_light, app_on_light, pregame_light, victory_light, period_light, turn_off_lights, fut_light, init_game_light
 from config import BASE_API_URL, TODAY
 
 class Game:
@@ -100,6 +100,7 @@ class Game:
     
     def watch_game(self):
         print("Watch game")
+        init_game_light(self.led_count) if self.enable_lights else False
 
         # make initial API request to get the game data
         r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")

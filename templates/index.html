@@ -82,10 +82,9 @@
         });
     });
 
-    setTimeout(function(){$('#configure').fadeIn(1000)}, 0)
-    setTimeout(function(){$('form').fadeIn(1000)}, 500) 
-    setTimeout(function(){$('#current-configuration').fadeIn(1000)}, 1000)
-    setTimeout(function(){$('#start-button').fadeIn(1000)}, 1500);
+    setTimeout(function(){$('#configure').fadeIn(1000)}, 0);
+    setTimeout(function(){$('form').fadeIn(1000)}, 500);
+    setTimeout(function(){$('#current-configuration').fadeIn(1000)}, 1000);
     setTimeout(function(){$('footer').fadeIn(1000)}, 2000);
 
 </script> 
@@ -157,7 +156,9 @@
                 
             </form>
         </div>
+
         {% if data %}
+
         <div id="current-configuration" style="display: none;" class="my-5 mx-3">
             <h2 class="pt-3">Current configuration</h2>
             <table class="table table-hover table-dark">
@@ -182,12 +183,24 @@
                     <td>{{ data['enable_audio'] }}</td>
                 </tr>
             </table>
-            <p class="m-3">If you are happy with the above configuration, click the start button below.</p>
+            <p class="my-3">***If you are happy with the above configuration, click the start button below.</p>
         </div>
+
+
         {% endif %}
-        <a id="start-button" style="display: none;" class="btn btn-primary btn-lg mx-3" href="{{url_for('start_game_lp')}}">Start App</a>
+
     </div>
 
     {% endif %}
 
+
 {% endblock %}
+
+
+{% if data %}
+{% block prefooter %}
+
+<button class="w-75 btn btn-success btn-lg">Start</button>
+
+{% endblock %}
+{% endif %}

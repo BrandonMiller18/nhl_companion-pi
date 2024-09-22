@@ -76,8 +76,10 @@
         enable_lights_toggle.on('change', function() {
             if (this.checked) {
                 led_count_input.fadeIn();
+                led_count_input.prop('required', true);
             } else {
                 led_count_input.fadeOut();
+                led_count_input.prop('required', false);
             }
         });
     });
@@ -94,6 +96,17 @@
 </script>
 
 {% endblock %}
+
+{% if data %} 
+{% set led_count_placeholder = "LED Count: " + data['led_count'] %}
+{% set stream_delay_placeholder = "Stream delay: " + data['stream_delay'] %}
+{% else %}
+{% set led_count_placeholder = "Input LED count..."%}
+{% set stream_delay_placeholder = "Input stream delay..."%} 
+{% set required = "required" %}
+{% endif %}
+
+
 {% block body %}
 
 
@@ -130,7 +143,7 @@
                         </select>
                     </div>
                     <div class="col">
-                        <input class="form-control" type="text" placeholder="Stream delay: 5" name="stream_delay" id="stream_delay">
+                        <input class="form-control" type="number" min="1" {{required}} placeholder="{{stream_delay_placeholder}}" name="stream_delay" id="stream_delay">
                     </div>
                 </div>
                 <div class="input-group row ms-1 my-3">
@@ -149,7 +162,7 @@
                 </div>
                 <div class="input-group row mb-2">
                     <div class="col">
-                        <input type="text" class="w-50 form-control mb-3" name="led_count" id="led_count" placeholder="Input LED Count">
+                        <input type="number" min="1" class="w-50 form-control mb-3" name="led_count" id="led_count" placeholder="{{led_count_placeholder}}">
                     </div>
                 </div>
                 <input class="btn btn-secondary" type="submit">

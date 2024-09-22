@@ -55,14 +55,22 @@ def configure_game():
     enable_audio = request.form.get('audio')
     led_count = request.form.get('led_count')
 
+    if os.path.isfile('config.json'):
+        with open('config.json', 'r') as f:
+            data = json.load(f)
+            current_led_count = data['led_count']
+    else:
+        data = None
+        current_led_count = '0'
+
     # create config.json file and write form data to file for later use
     with open('config.json', 'w') as f:
         data = {
             "user_team": user_team,
-            "stream_delay": "5" if stream_delay == '' else stream_delay,
+            "stream_delay": data['stream_delay'] if stream_delay == '' else stream_delay,
             "enable_lights": True if enable_lights else False,
             "enable_audio": True if enable_audio else False,
-            "led_count": led_count if led_count else 0,
+            "led_count": led_count if led_count else current_led_count,
         }
 
         f.write(json.dumps(data))

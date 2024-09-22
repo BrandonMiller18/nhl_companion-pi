@@ -2,6 +2,18 @@
 {% block title %}NHL Companion | Hockey Goal Horn App{% endblock %}
 {% block desc %} Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum et ipsa facilis in, quidem voluptatum pariatur facere numquam qui corrupti ea, consequuntur itaque libero, autem consectetur officiis enim odit. Atque. {% endblock %}
 
+{% block scripts %}
+
+<script>
+    function myFunc() {
+        $('#running').fadeIn();
+        $('#a').fadeOut()
+    }
+</script>
+
+{% endblock %}
+
+
 {% block body %}
 
 {% if watching %}
@@ -15,10 +27,10 @@
 
     {% else %}
 
-<div id="a" style="display: inherit;" class="container-md gx-5 bg-dark pt-5 mb-5 d-flex align-middle justify-content-center">
+<div class="container-md gx-5 bg-dark pt-5 mb-5 d-flex align-middle justify-content-center">
 
-    <div>
-        <a href="{{url_for('start_game')}}" onclick="$('#running').css('display', 'inherit')" class="btn btn-lg btn-success">Run</a>
+    <div id="a">
+        <a href="{{url_for('start_game')}}" onclick="myFunc()" class="btn btn-lg btn-success">Run</a>
     </div>
 
 </div>

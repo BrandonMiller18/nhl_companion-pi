@@ -172,7 +172,7 @@ def end_game():
     while game.watching:
         print(f"Cancelling game... {i}", flush=True)
         time.sleep(1)
-        i++
+        i+=1
 
     # send user back home with stop_loop path set to 1
     return redirect(url_for('index', stop_loop=1))

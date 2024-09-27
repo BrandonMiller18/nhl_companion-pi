@@ -1,12 +1,13 @@
 import requests
 import json
 import time
+from datetime import date
 
 import pygame
 
 from helpers import get_horn 
 from lights import goal_light, app_on_light, pregame_light, victory_light, period_light, turn_off_lights, fut_light, init_game_light
-from config import BASE_API_URL, TODAY
+from config import BASE_API_URL
 
 class Game:
 
@@ -33,7 +34,7 @@ class Game:
     def game_info(self):
         # Get and set all the information about the selected team's game
 
-        r = requests.get(f'{BASE_API_URL}score/{TODAY}')
+        r = requests.get(f'{BASE_API_URL}score/{date.today()}')
         data = json.dumps(r.json(), indent=4)
 
         # save file for testing
@@ -147,9 +148,9 @@ class Game:
             # OFF/FINAL status will break the loop and check if your team won. If so, it will do a victory dance
             if self.game_state != "LIVE":
                 if self.game_state == "FUT":
-                    print("The game has not started yet. Checking again in 10 minutes.", flush=True)
+                    print("The game has not started yet. Checking again in 5 minutes.", flush=True)
                     fut_light(self.led_count) if self.enable_lights else False
-                    time.sleep(600)
+                    time.sleep(300)
                     continue
                 elif self.game_state == "PRE":
                     print("The game is about to start. Checking again in 2 minutes.", flush=True)

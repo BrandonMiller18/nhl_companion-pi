@@ -105,8 +105,20 @@ def init_game_light(led_count):
     LED_COUNT = led_count
     #Initialise a strips variable, provide the GPIO Data Pin
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
-    strip = neopixel.NeoPixel(board.D18, LED_COUNT, brightness=0.05)
+    strip = neopixel.NeoPixel(board.D18, LED_COUNT, brightness=0.5)
     strip.fill((255, 0, 0))
+    time.sleep(0.25)
+    strip.fill((0, 0, 0))
+    
+    
+def no_game_light(led_count):
+    LED_COUNT = led_count
+    #Initialise a strips variable, provide the GPIO Data Pin
+    #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
+    strip = neopixel.NeoPixel(board.D18, LED_COUNT, brightness=0.5)
+    for i in range(255):
+        strip.fill((i, 0, 0))
+    
     time.sleep(0.25)
     strip.fill((0, 0, 0))
 

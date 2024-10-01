@@ -4,6 +4,7 @@ import os.path
 from flask import Flask, render_template, redirect, request, flash, url_for
 
 from helpers import standard_date, update_teams
+from lights import no_game_light
 from game import Game
 
 app = Flask(__name__)
@@ -128,6 +129,7 @@ def start_game():
 
     # if user team does not play, show error and return to homepage
     if not game.is_game:
+        no_game_light(int(led_count)) if enable_lights else False
         flash(f"{game.team} does not play today.", "danger")
         return redirect(url_for('index'))
 

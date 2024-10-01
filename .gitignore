@@ -1,6 +1,6 @@
 /venv
 /test
-*.json
+/*.json
 /__pycache__
 
 .env

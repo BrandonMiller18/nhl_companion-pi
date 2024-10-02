@@ -172,16 +172,13 @@ def help():
 
 @app.route('/_end-game')
 def end_game():
-    # request here means user clicked on cancel app button
-
+    # request here means user clicked on cancel app butto
     try:
         game
     except NameError:
         # send user back home with stop_loop path set to 2
         return redirect(url_for('index', stop_loop=2))
         
-    
-
     # set stop_loop to true. Next time the app updates, the While True loop will break and game will end
     # BUG - when in preview mode, it can take up to 30 min to do this, which sucks.
     # TRY TO FIND A WAY TO MAKE THIS HAPPEN IMMEDIATELY

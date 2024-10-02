@@ -41,6 +41,10 @@ def index(stop_loop=0):
     if stop_loop == '1':
         flash("User has stopped the app.", "danger")
         return redirect(url_for('index'))
+    
+    if stop_loop == '2':
+        flash("There is no game running currently!", "danger")
+        return redirect(url_for('index'))
 
     return render_template('index.html', data=data, team_abbreviations=team_abbreviations, watching=watching)
 
@@ -159,7 +163,6 @@ def start_game():
     if game.stop_loop:
         return redirect(url_for('end_game'))
 
-    # This template is half baked. TODO - come up with a better fucking solution
     flash('Game is over, or an error happened.', 'danger')
     return redirect(url_for('index'))
 
@@ -172,6 +175,14 @@ def help():
 @app.route('/_end-game')
 def end_game():
     # request here means user clicked on cancel app button
+
+    try:
+        game
+    except NameError:
+        # send user back home with stop_loop path set to 2
+        return redirect(url_for('index', stop_loop=2))
+        
+    
 
     # set stop_loop to true. Next time the app updates, the While True loop will break and game will end
     # BUG - when in preview mode, it can take up to 30 min to do this, which sucks.

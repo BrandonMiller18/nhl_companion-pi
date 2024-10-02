@@ -18,6 +18,24 @@ class Game:
         self.enable_audio = enable_audio
         self.enable_lights = enable_lights
         self.led_count = int(led_count)
+        
+        # get team name - use NHL records API for list of franchises
+        r = requests.get("https://records.nhl.com/site/api/franchise")
+        data = json.dumps(r.json(), indent=4)
+        data = json.loads(data) # load json for parsing
+        
+        for team in data['data']:
+            if team['teamAbbrev'] == self.team:
+                self.team_full_name = team['fullName'].replace('.', '')
+
+        # set team color
+        with open('colors/colors.json', 'r') as f:
+            data = json.load(f)
+            primary_color = data[self.team_full_name]['1']
+            self.primary_color = (primary_color[0], primary_color[1], primary_color[2])
+            
+            secondary_color = data[self.team_full_name]['2']
+            self.secondary_color = (secondary_color[0], secondary_color[1], secondary_color[2])
 
         # set and initialize goal horn
         if self.enable_audio:
@@ -30,7 +48,6 @@ class Game:
                 print(f"{message}\n--")
 
 
-    
     def game_info(self):
         # Get and set all the information about the selected team's game
 
@@ -178,7 +195,7 @@ class Game:
             # App starts running here. Only way to get to this point in the loop 
             # is if game state is LIVE. Unless there is a game state that idk about
             # I wonder what the game states are.... THERE IS NO DOCUMENTATION!
-            app_on_light(self.led_count) if self.enable_lights else False
+            app_on_light(self.led_count, self.primary_color) if self.enable_lights else False
             
             # set new home score
             new_home_score = data["homeTeam"]["score"]
@@ -187,12 +204,12 @@ class Game:
             # Check scores, play horn, flash lights, go nuts!
             if new_home_score > self.home_score and self.home:
                 pygame.mixer.music.play() if self.enable_audio else False
-                goal_light(self.led_count) if self.enable_lights else False
+                goal_light(self.led_count, self.primary_color, self.secondary_color) if self.enable_lights else False
                 print(f"{self.team} scores!!", flush=True)
 
             if new_away_score > self.away_score and self.away:
                 pygame.mixer.music.play() if self.enable_audio else False
-                goal_light(self.led_count)  if self.enable_lights else False
+                goal_light(self.led_count, self.primary_color, self.secondary_color)  if self.enable_lights else False
                 print(f"{self.team} scores!!", flush=True)
             
             # reset scores for next check

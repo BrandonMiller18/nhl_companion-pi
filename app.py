@@ -17,7 +17,13 @@ team_abbreviations = update_teams()
 @app.route('/')
 @app.route('/<stop_loop>')
 def index(stop_loop=0):
-    # TODO - get rid of <stop_loop> -- its stupid and unnnecessary
+    if stop_loop == '1':
+        flash("User has stopped the app.", "danger")
+        return redirect(url_for('index'))
+    
+    if stop_loop == '2':
+        flash("There is no game running currently!", "danger")
+        return redirect(url_for('index'))
 
     # HACK
     # see if there is a game happening. there might not be, thus try/except...
@@ -37,14 +43,6 @@ def index(stop_loop=0):
             data = json.load(f)
     else:
         data = None
-
-    if stop_loop == '1':
-        flash("User has stopped the app.", "danger")
-        return redirect(url_for('index'))
-    
-    if stop_loop == '2':
-        flash("There is no game running currently!", "danger")
-        return redirect(url_for('index'))
 
     return render_template('index.html', data=data, team_abbreviations=team_abbreviations, watching=watching)
 

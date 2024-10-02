@@ -124,7 +124,12 @@ def start_game():
 
     # instatiate game object and start the game.. Pass config vars to Game class
     global game 
-    game = Game(user_team=user_team, stream_delay=stream_delay, enable_audio=enable_audio, enable_lights=enable_lights, led_count=led_count)
+    game = Game(user_team=user_team,
+                stream_delay=stream_delay,
+                enable_audio=enable_audio,
+                enable_lights=enable_lights,
+                led_count=led_count
+            )
     
     # Get game info for user team
     game.game_info()
@@ -134,9 +139,9 @@ def start_game():
         no_game_light(int(led_count)) if enable_lights else False
         flash(f"{game.team} does not play today.", "danger")
         return redirect(url_for('index'))
-
-    # if you got this far, there is a game. Watch it.
-    game.watch_game()
+    else:
+        # if you got this far, there is a game. Watch it.
+        game.watch_game()
 
     # All the game info, for some reason. I don't think its necessary at this point, but nice to have here. 
     # NEEDS UPDATED BEFORE USED FOR ANYTHING SPECIAL

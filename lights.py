@@ -34,14 +34,15 @@ def goal_light(led_count):
     strip.fill((0,0,0))
     
 
-def app_on_light(led_count):
+def app_on_light(led_count, color):
 
     LED_COUNT = led_count
     #Initialise a strips variable, provide the GPIO Data Pin
     #utilised and the amount of LED Nodes on strip and brightness (0 to 1 value)
     strip = neopixel.NeoPixel(board.D18, LED_COUNT, brightness=1)
     
-    strip.fill((0,0,50))
+    #takes in color arg for team primary color
+    strip.fill(color)
     
 
 def fut_light(led_count):
@@ -85,7 +86,7 @@ def period_light(led_count):
     strip.fill((0,0,0))
     
 
-def victory_light(led_count):
+def victory_light(led_count, primary_color, secondary_color):
 
     LED_COUNT = led_count
     #Initialise a strips variable, provide the GPIO Data Pin
@@ -94,11 +95,14 @@ def victory_light(led_count):
     
     i=0
     while i < 20:
+        strip.fill(primary_color)
+        time.sleep(.05)
+        strip.fill(secondary_color)
+        time.sleep(.05)
         strip.fill((255,255,255))
         time.sleep(.05)
         strip.fill((0,0,0))
         i += 1
-        time.sleep(.05)
 
 
 def init_game_light(led_count):

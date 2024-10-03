@@ -183,7 +183,7 @@ class Game:
                         self.win = False
 
                     if self.win:
-                        victory_light(self.led_count) if self.enable_lights else False
+                        victory_light(self.led_count, self.primary_color, self.secondary_color) if self.enable_lights else False
                         print(f"{self.team} wins!!!", flush=True)
                     else:
                         # do sad stuff

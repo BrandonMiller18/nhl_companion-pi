@@ -1,6 +1,7 @@
 import json
 import time
 import os.path
+from threading import Thread
 from flask import Flask, render_template, redirect, request, flash, url_for
 
 from helpers import standard_date, update_teams
@@ -15,15 +16,20 @@ app.config.from_pyfile('config.py')
 team_abbreviations = update_teams()
 
 @app.route('/')
-@app.route('/<stop_loop>')
-def index(stop_loop=0):
-    if stop_loop == '1':
+@app.route('/<arg>')
+def index(arg=0):
+    if arg == '1':
         flash("User has stopped the app.", "danger")
         return redirect(url_for('index'))
     
-    if stop_loop == '2':
+    if arg == '2':
         flash("There is no game running currently!", "danger")
         return redirect(url_for('index'))
+    
+    if arg == '3':
+        flash("Game has started! Enjoy!", "success")
+        return redirect(url_for('index'))
+    
 
     # HACK
     # see if there is a game happening. there might not be, thus try/except...
@@ -141,33 +147,15 @@ def start_game():
         return redirect(url_for('index'))
     else:
         # if you got this far, there is a game. Watch it.
-        game.watch_game()
-
-    # All the game info, for some reason. I don't think its necessary at this point, but nice to have here. 
-    # NEEDS UPDATED BEFORE USED FOR ANYTHING SPECIAL
-    game_info = {
-        'user_team': game.team,
-        'game_date': game.date,
-        'game_start_time': standard_date(game.game_start_time) if game.game_start_time else None,
-        'game_state': game.game_state,
-        'is_game': game.is_game,
-        'is_home': game.home,
-        'is_away': game.away,
-        'game_id': game.game_id,
-        'home_team': game.home_team,
-        'home_team_logo': game.home_team_logo,
-        'away_team': game.away_team,
-        'away_team_logo': game.away_team_logo,
-        'home_score': game.home_score,
-        'away_score': game.away_score
-    }
-
-    # Added some stop loop check here just to be safe. Don't think it actually does anything.
-    if game.stop_loop:
-        return redirect(url_for('end_game'))
-
-    flash('Game is over, or an error happened.', 'danger')
-    return redirect(url_for('index'))
+        # run game on a different thread so the user does not get hung
+        # NOTE: I have no idea how this actually works..
+        Thread(target=game.watch_game).start()
+        
+    # wait for game.watching attribute to be defined before continuing
+    while not hasattr(game, 'watching'):
+        pass
+    
+    return redirect(url_for('index', arg=3))
 
 
 @app.route('/help')
@@ -182,7 +170,7 @@ def end_game():
         game
     except NameError:
         # send user back home with stop_loop path set to 2
-        return redirect(url_for('index', stop_loop=2))
+        return redirect(url_for('index', arg=2))
         
     # set stop_loop to true. Next time the app updates, the While True loop will break and game will end
     # BUG - when in preview mode, it can take up to 30 min to do this, which sucks.
@@ -196,5 +184,5 @@ def end_game():
         time.sleep(1)
         i+=1
 
-    # send user back home with stop_loop path set to 1
-    return redirect(url_for('index', stop_loop=1))
+    # send user back home with arg path set to 1
+    return redirect(url_for('index', arg=1))

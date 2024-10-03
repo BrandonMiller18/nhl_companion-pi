@@ -167,12 +167,12 @@ class Game:
                 if self.game_state == "FUT":
                     print("The game has not started yet. Checking again in 5 minutes.", flush=True)
                     fut_light(self.led_count) if self.enable_lights else False
-                    time.sleep(300)
+                    time.sleep(300) #300
                     continue
                 elif self.game_state == "PRE":
                     print("The game is about to start. Checking again in 2 minutes.", flush=True)
                     pregame_light(self.led_count) if self.enable_lights else False
-                    time.sleep(120)
+                    time.sleep(120) #120
                     continue
                 elif self.game_state in ("OFF", "FINAL"): 
                     print("The game is over.", flush=True)

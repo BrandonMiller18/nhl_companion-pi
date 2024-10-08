@@ -236,7 +236,7 @@ class Game:
                     period_light(self.led_count) if self.enable_lights else False
                     self.inIntermission = True
                     
-                if new_play['typeDescKey'] == 'period-start' and not self.inIntermission:
+                if new_play['typeDescKey'] == 'period-start' and self.inIntermission:
                     period_light(self.led_count) if self.enable_lights else False
                     self.inIntermission = False
                     

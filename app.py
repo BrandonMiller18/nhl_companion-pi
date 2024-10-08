@@ -149,8 +149,7 @@ def start_game():
         # if you got this far, there is a game. Watch it.
         # run game on a different thread so the user does not get hung
         # NOTE: I have no idea how this actually works..
-        t = Thread(target=game.watch_game).start()
-        t.start
+        Thread(target=game.watch_game).start()
         
     # wait for game.watching attribute to be defined before continuing
     while not hasattr(game, 'watching'):

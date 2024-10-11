@@ -57,7 +57,7 @@ def get_horn(abbr):
     return file       
 
 
-async def update_colors_json():
+def update_colors_json():
 
     r = requests.get('https://teamcolorcodes.com/nhl-team-color-codes/')
     soup = BeautifulSoup(r.text, 'html.parser')
@@ -81,7 +81,7 @@ async def update_colors_json():
         soup = BeautifulSoup(r.text, 'lxml')
         
         # Define the regular expression pattern to find "RGB: ("
-        rgb_pattern = re.compile(r'RGB:\s*\(')
+        rgb_pattern = re.compile(r'RGB:?\s*\(')
         rgb_strs = soup.find_all(string=rgb_pattern)
 
         rgb_values = {}
@@ -90,7 +90,7 @@ async def update_colors_json():
         for match in rgb_strs:
             
             # Regular expression to match the RGB values inside parentheses
-            rgb_value_pattern = r'RGB:\s*\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)'
+            rgb_value_pattern = r'RGB:?\s*\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)'
             # Search for the pattern in the text
             rgb_value_str = re.search(rgb_value_pattern, match)
             

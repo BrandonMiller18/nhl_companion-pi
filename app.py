@@ -186,3 +186,11 @@ def end_game():
 
     # send user back home with arg path set to 1
     return redirect(url_for('index', arg=1))
+
+
+@app.route('/api/colors')
+def colors_api():
+    with open('colors/colors.json') as f:
+        data = json.load(f)
+    
+    return json.dumps(data, indent=4)

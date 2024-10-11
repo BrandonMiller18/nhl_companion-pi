@@ -1,7 +1,7 @@
 import json
 import time
 import os.path
-from threading import Thread
+# from threading import Thread
 from flask import Flask, render_template, redirect, request, flash, url_for
 
 from helpers import standard_date, update_teams
@@ -149,7 +149,9 @@ def start_game():
         # if you got this far, there is a game. Watch it.
         # run game on a different thread so the user does not get hung
         # NOTE: I have no idea how this actually works..
-        Thread(target=game.watch_game).start()
+        # Thread(target=game.watch_game).start()
+        
+        game.watch_game()
         
     # wait for game.watching attribute to be defined before continuing
     while not hasattr(game, 'watching'):

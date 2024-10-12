@@ -38,6 +38,7 @@ class Game:
             self.secondary_color = (secondary_color[0], secondary_color[1], secondary_color[2])
 
         # set and initialize goal horn
+        self.audio_error = False
         if self.enable_audio:
             try:
                 self.goal_horn = get_horn(self.team)
@@ -46,8 +47,9 @@ class Game:
             except pygame.error as message:
                 print("--\nCould not load pygame audio, probably because there is no audio device.")
                 print(f"{message}\n--")
-
-
+                self.audio_error = True
+    
+    
     def game_info(self):
         # Get and set all the information about the selected team's game
 
@@ -135,12 +137,14 @@ class Game:
         # set initial values before while loop
         self.game_state = data["gameState"]
         self.period = data["displayPeriod"]
-        self.inIntermission = data["clock"]["inIntermission"] if self.game_state == "Live" else False
+        self.inIntermission = data["clock"]["inIntermission"] if self.game_state == "LIVE" else False
         self.home_score = data["homeTeam"]["score"]
         self.away_score = data["awayTeam"]["score"]
 
         self.stop_loop = False
         len_plays = 0
+        i = 0
+        app_on_light(self.led_count, self.primary_color) if self.enable_lights else False
         while True:
             self.watching = True # used to block user interface from starting multiple games
             if self.stop_loop:
@@ -191,30 +195,33 @@ class Game:
             # is if game state is LIVE. Unless there is a game state that idk about
             # I wonder what the game states are.... THERE IS NO DOCUMENTATION!
             
-            app_on_light(self.led_count, self.primary_color) if self.enable_lights else False
-
-            
             # find the number of new plays to check...
             # if the newly fetched array is longer than the known len, set the len and check the plays
             plays = data['plays']
             if len_plays == 0:
                 len_plays = len(plays)
-                print(f'Length of plays array: {len_plays}')
+                print(f'Length of plays array: {len_plays}\nLoop iteration: {i}')
+                i+=1
                 continue
+            
             if len(plays) > len_plays:
                 len_new_plays = len(plays) - len_plays
                 len_plays = len(plays)
             else:
-                print('No change')
+                print(f'Length of plays array: {len_plays}\nLoop iteration: {i}')
+                i+=1
                 continue
+            
             print(f'\nLength of plays array: {len_plays}')
             print(f'New plays: {len_new_plays}')
                        
             # check new plays since last refresh for fun stuff like goals
             plays_checked = 0
             for new_play in plays[-len_new_plays:]:
+                print(new_play['typeDescKey'])
                 if new_play['typeDescKey'] == 'goal':
                     if new_play['details']['homeScore'] > self.home_score and self.home:
+                        time.sleep(self.stream_delay) # wait for stream
                         pygame.mixer.music.play() if self.enable_audio else False
                         goal_light(self.led_count) if self.enable_lights else False
                         print(f"{self.team} scores!!", flush=True)
@@ -222,6 +229,7 @@ class Game:
                         self.home_score = new_play['details']['homeScore']
                         
                     if new_play['details']['awayScore'] > self.away_score and self.away:
+                        time.sleep(self.stream_delay) # wait for stream
                         pygame.mixer.music.play() if self.enable_audio else False
                         goal_light(self.led_count)  if self.enable_lights else False
                         print(f"{self.team} scores!!", flush=True)
@@ -233,10 +241,12 @@ class Game:
                     self.away_score = new_play['details']['awayScore']
                         
                 if new_play['typeDescKey'] == 'period-end' and not self.inIntermission:
+                    time.sleep(self.stream_delay) # wait for stream
                     period_light(self.led_count) if self.enable_lights else False
                     self.inIntermission = True
                     
                 if new_play['typeDescKey'] == 'period-start' and self.inIntermission:
+                    time.sleep(self.stream_delay) # wait for stream
                     period_light(self.led_count) if self.enable_lights else False
                     self.inIntermission = False
                     
@@ -247,7 +257,8 @@ class Game:
 
             print(f"Home score is: {self.home_score}\nAway score is: {self.away_score}\n")
 
-            time.sleep(self.stream_delay)
+            i+=1
+            time.sleep(1) # wait one second before next refresh
 
         # if you got here the While True loop was broken, so you are not 
         # watching the game anymore. Turn it all off

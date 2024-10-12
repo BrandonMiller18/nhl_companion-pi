@@ -18,6 +18,10 @@ class Game:
         self.enable_audio = enable_audio
         self.enable_lights = enable_lights
         self.led_count = int(led_count)
+        self.team_info()
+        
+        self.stop_loop = False
+        self.audio_error = False
         
         # get team name - use NHL records API for list of franchises
         r = requests.get("https://records.nhl.com/site/api/franchise")
@@ -38,7 +42,6 @@ class Game:
             self.secondary_color = (secondary_color[0], secondary_color[1], secondary_color[2])
 
         # set and initialize goal horn
-        self.audio_error = False
         if self.enable_audio:
             try:
                 self.goal_horn = get_horn(self.team)
@@ -50,15 +53,27 @@ class Game:
                 self.audio_error = True
     
     
+    def team_info(self):
+        
+        r = requests.get('https://records.nhl.com/site/api/franchise')
+        data = json.dumps(r.json(), indent=4)
+        data = json.loads(data) # load json for parsing 
+        
+        for franchise in data['data']:
+            if franchise['teamAbbrev'] == self.team:
+                self.team_id = franchise['mostRecentTeamId']
+                self.team_full_name = franchise['fullName']
+                self.team_nickname = franchise['teamCommonName']
+                self.team_city = franchise['teamPlaceName']
+                break
+        
+    
+    
     def game_info(self):
         # Get and set all the information about the selected team's game
 
         r = requests.get(f'{BASE_API_URL}score/{date.today()}')
         data = json.dumps(r.json(), indent=4)
-
-        # save file for testing
-        with open('todays_games.json', 'w') as f:
-            f.write(data)
 
         data = json.loads(data) # load json for parsing
         self.date = data["currentDate"]
@@ -117,6 +132,32 @@ class Game:
                     self.away_team_logo = None
                     self.game_id = None
 
+
+    def evaluate_new_play(self, play):
+        if play['typeDescKey'] == 'goal':
+            if play['details']['eventOwnerTeamId'] == self.team_id:
+                time.sleep(self.stream_delay) # wait for stream
+                pygame.mixer.music.play() if self.enable_audio else False
+                goal_light(self.led_count) if self.enable_lights else False
+                print(f"{self.team} scores!!", flush=True)
+                
+                self.home_score = play['details']['homeScore']
+                self.away_score = play['details']['awayScore']
+                
+            # ensure both scores are set
+            self.home_score = play['details']['homeScore']
+            self.away_score = play['details']['awayScore']
+                
+        if play['typeDescKey'] == 'period-end' and not self.inIntermission:
+            time.sleep(self.stream_delay) # wait for stream
+            period_light(self.led_count) if self.enable_lights else False
+            self.inIntermission = True
+            
+        if play['typeDescKey'] == 'period-start' and self.inIntermission:
+            time.sleep(self.stream_delay) # wait for stream
+            period_light(self.led_count) if self.enable_lights else False
+            self.inIntermission = False
+
     
     def watch_game(self):
         print("Watch game")
@@ -125,14 +166,7 @@ class Game:
         # make initial API request to get the game data
         r = requests.get(f"{BASE_API_URL}gamecenter/{self.game_id}/play-by-play")
         data = json.dumps(r.json(), indent=4)
-        # save file for testing
-        with open('game.json', 'w') as f:
-            f.write(data)
         data = json.loads(data) # load json for parsing    
-
-        # for testing, get rid of this some day
-        # with open("game.json", "r") as f:
-        #     data = json.load(f)
 
         # set initial values before while loop
         self.game_state = data["gameState"]
@@ -141,11 +175,12 @@ class Game:
         self.home_score = data["homeTeam"]["score"]
         self.away_score = data["awayTeam"]["score"]
 
-        self.stop_loop = False
-        len_plays = 0
+        play_ids = []
         i = 0
         app_on_light(self.led_count, self.primary_color) if self.enable_lights else False
         while True:
+            i+=1
+            print(f"Loop iteration: {i}")
             self.watching = True # used to block user interface from starting multiple games
             if self.stop_loop:
                 turn_off_lights(self.led_count)
@@ -162,7 +197,7 @@ class Game:
             # check non live game statuses... I really hope this is all of them
             # OFF/FINAL status will break the loop and check if your team won. If so, it will do a victory dance
             self.game_state = data["gameState"]
-            if self.game_state != "LIVE":
+            if self.game_state not in ("LIVE", "CRIT"):
                 if self.game_state == "FUT":
                     print("The game has not started yet. Checking again in 5 minutes.", flush=True)
                     fut_light(self.led_count) if self.enable_lights else False
@@ -194,70 +229,13 @@ class Game:
             # App starts running here. Only way to get to this point in the loop 
             # is if game state is LIVE. Unless there is a game state that idk about
             # I wonder what the game states are.... THERE IS NO DOCUMENTATION!
-            
-            # find the number of new plays to check...
-            # if the newly fetched array is longer than the known len, set the len and check the plays
             plays = data['plays']
-            if len_plays == 0:
-                len_plays = len(plays)
-                print(f'Length of plays array: {len_plays}\nLoop iteration: {i}')
-                i+=1
-                continue
-            
-            if len(plays) > len_plays:
-                len_new_plays = len(plays) - len_plays
-                len_plays = len(plays)
-            else:
-                print(f'Length of plays array: {len_plays}\nLoop iteration: {i}')
-                i+=1
-                continue
-            
-            print(f'\nLength of plays array: {len_plays}')
-            print(f'New plays: {len_new_plays}')
-                       
-            # check new plays since last refresh for fun stuff like goals
-            plays_checked = 0
-            for new_play in plays[-len_new_plays:]:
-                print(new_play['typeDescKey'])
-                if new_play['typeDescKey'] == 'goal':
-                    if new_play['details']['homeScore'] > self.home_score and self.home:
-                        time.sleep(self.stream_delay) # wait for stream
-                        pygame.mixer.music.play() if self.enable_audio else False
-                        goal_light(self.led_count) if self.enable_lights else False
-                        print(f"{self.team} scores!!", flush=True)
-                        
-                        self.home_score = new_play['details']['homeScore']
-                        
-                    if new_play['details']['awayScore'] > self.away_score and self.away:
-                        time.sleep(self.stream_delay) # wait for stream
-                        pygame.mixer.music.play() if self.enable_audio else False
-                        goal_light(self.led_count)  if self.enable_lights else False
-                        print(f"{self.team} scores!!", flush=True)
-                        
-                        self.away_score = new_play['details']['awayScore']
-                        
-                    # ensure both scores are set
-                    self.home_score = new_play['details']['homeScore']
-                    self.away_score = new_play['details']['awayScore']
-                        
-                if new_play['typeDescKey'] == 'period-end' and not self.inIntermission:
-                    time.sleep(self.stream_delay) # wait for stream
-                    period_light(self.led_count) if self.enable_lights else False
-                    self.inIntermission = True
-                    
-                if new_play['typeDescKey'] == 'period-start' and self.inIntermission:
-                    time.sleep(self.stream_delay) # wait for stream
-                    period_light(self.led_count) if self.enable_lights else False
-                    self.inIntermission = False
-                    
-                plays_checked += 1
-            
-            print(f'Checked {plays_checked} plays.')
+            for play in plays:
+                if play['eventId'] not in play_ids:
+                    play_ids.append(play['eventId'])
+                    print(f"Evaluating play: {play['typeDescKey']}")
+                    self.evaluate_new_play(play)
 
-
-            print(f"Home score is: {self.home_score}\nAway score is: {self.away_score}\n")
-
-            i+=1
             time.sleep(1) # wait one second before next refresh
 
         # if you got here the While True loop was broken, so you are not 
